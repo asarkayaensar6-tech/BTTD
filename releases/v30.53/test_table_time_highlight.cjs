@@ -1,0 +1,22 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync(__dirname+'/../index.html','utf8');
+const segment=(a,b)=>html.slice(html.indexOf(a),html.indexOf(b,html.indexOf(a)));
+let now=Date.parse('2026-09-27T12:00:00');class MockDate extends Date{constructor(...a){super(...(a.length?a:[now]))}static now(){return now}}
+const c={Date:MockDate,state:{warnMinutes:15,alertMinutes:30,uiOptions:{showServiceWarnings:true}},Math,Number};vm.createContext(c);
+vm.runInContext(segment('function status(t){','function _render(){'),c);
+const warn={openedAt:now-20*60000,lastServiceAt:now-20*60000},alert={openedAt:now-35*60000,lastServiceAt:now-35*60000},legacy={openedAt:now-20*60000};
+assert.equal(c.status(warn),'warn');assert.equal(c.status(alert),'alert');assert.equal(c.status(legacy),'warn','missing last-service timestamp falls back to table open time');
+c.state.uiOptions.showServiceWarnings=false;assert.equal(c.status(alert),'',"the user's service-warning toggle is respected");
+assert(html.includes('class="table-card ${warnClass}"'));
+assert(html.includes('MASA AÇIK'));assert(html.includes('SON SERVİS'));
+const css=html.slice(html.indexOf('<style id="btdd-v30-53-table-time-and-product-units">'),html.indexOf('</style>',html.indexOf('<style id="btdd-v30-53-table-time-and-product-units">')));
+assert(/body \.table-card\.warn[^}]*background:linear-gradient\([^}]*!important/.test(css));
+assert(/body \.table-card\.alert[^}]*background:linear-gradient\([^}]*!important/.test(css));
+console.log('Table time highlight: 7 warning-level, fallback, toggle, and theme-independent contrast checks passed');
+const render=segment('function _render(){','function render(force=false)');
+const nodes={'#tables':{innerHTML:''},'#tableSectionSummary':{textContent:''}};
+c.$=key=>nodes[key]||null;c.document={querySelectorAll:()=>[]};c.esc=x=>String(x);c.money=n=>'₺'+n;c.total=()=>120;c.elapsed=ts=>Math.floor((MockDate.now()-Number(ts))/60000)+' dk';
+c.state.area='game';c.state.uiOptions={showOpenedTime:true,showServiceTime:true,showItemCount:true};c.state.tables=[{id:'a',name:'Masa A',area:'game',openedAt:now-20*60000,lastServiceAt:now-20*60000,items:[{qty:2}]}];
+vm.runInContext(render,c);c._render();assert(nodes['#tables'].innerHTML.includes('class="table-card warn"'));assert(nodes['#tables'].innerHTML.includes('MASA AÇIK'));assert(nodes['#tables'].innerHTML.includes('SON SERVİS'));assert(nodes['#tables'].innerHTML.includes('20 dk'));
+c.state.tables[0].lastServiceAt=now-35*60000;vm.runInContext(render,c);c._render();assert(nodes['#tables'].innerHTML.includes('class="table-card alert"'));
+console.log('Rendered table state: amber/red classes and visible duration pills verified');
