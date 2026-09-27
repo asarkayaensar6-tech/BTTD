@@ -1,0 +1,371 @@
+--- a/BTDD_KONTROL.py
++++ b/BTDD_KONTROL.py
+@@ -10,7 +10,14 @@
+ for required in ['/api/state','/api/archive-day','/api/shutdown','/sounds/success.wav']:
+     if required not in html and required.startswith('/sounds/'): errors.append('Eksik ses dosyasi kullanimi: '+required)
+     elif required not in html and not required.startswith('/sounds/'): errors.append('Eksik API kullanimi: '+required)
+-if "state.version='3.0.55.0'" not in html: errors.append('Surum etiketi 3.0.55.0 degil')
++if "state.version='3.0.56.0'" not in html: errors.append('Surum etiketi 3.0.56.0 degil')
++manifest=(base/'manifest.json').read_text(encoding='utf-8')
++installer=(base/'installer.iss').read_text(encoding='utf-8')
++if '<title>ASARKAYA — Adisyon</title>' not in html or 'apple-mobile-web-app-title\" content=\"ASARKAYA' not in html: errors.append('ASARKAYA gorunen web uygulama adi eksik')
++if '\"receipt-brand\">BTDD</div>' not in html: errors.append('Bilgi fisi BTDD markasi korunmadi')
++if '\"short_name\": \"ASARKAYA\"' not in manifest: errors.append('Ana ekran kisa adi ASARKAYA degil')
++if '{autodesktop}\\ASARKAYA' not in installer: errors.append('Windows masaustu kisayol adi ASARKAYA degil')
++if 'DefaultDirName={autopf}\\BTDD' not in installer: errors.append('Mevcut kurulum yolu geriye donuk uyumluluk icin korunmadi')
+ for required in ['id="unitSalesAnchor"','id="unitSalesRows"','function productUnitSales(','MASA AÇIK','SON SERVİS','body .table-card.warn','body .table-card.alert']:
+     if required not in html: errors.append('V30.53 masa sure/urun adet analizi eksik: '+required)
+ for required in ['function productSalesAnalysis(','id="unitSalesPeriod"','id="unitSalesFrom"','id="unitSalesTo"','id="unitSalesKpis"','id="unitSalesCategorySummary"','Bu dönemdeki satış satırları','UNIT_SALES_PAGE_SIZE=40']:
+@@ -70,7 +77,7 @@
+ if '<=55)state.soundOptions.volume=80' in html: errors.append('Dusuk ses seviyesini zorla 80 yapan eski hata geri gelmis')
+ if '_quarantine_corrupt_db' not in launcher or 'CorruptBackups' not in launcher: errors.append('Bozuk SQLite otomatik kurtarma eksik')
+ version_info=(base/'version_info.txt').read_text(encoding='utf-8')
+-if 'filevers=(3, 0, 55, 0)' not in version_info or 'prodvers=(3, 0, 55, 0)' not in version_info: errors.append('Windows sayisal surum bilgisi 3.0.55.0 degil')
++if 'filevers=(3, 0, 56, 0)' not in version_info or 'prodvers=(3, 0, 56, 0)' not in version_info: errors.append('Windows sayisal surum bilgisi 3.0.56.0 degil')
+ 
+ 
+ # V30.54 sade ayarlar ve kullanılmayan gezinme tekrarları
+@@ -173,5 +180,5 @@
+ print('- Toplu urun silme + hesap iptal PIN guvenligi: OK')
+ print('- Saydam/cam arayuz + kilitli ayarlar: OK')
+ print('- BTDD Sound 2.0 (8 ses): OK')
+-print('- Windows sayisal surum bilgisi: 3.0.55.0')
+-print('- Surum: 3.0.55.0')
++print('- Windows sayisal surum bilgisi: 3.0.56.0')
++print('- Surum: 3.0.56.0')
+--- a/DUZELTMELER_V30_56.txt
++++ b/DUZELTMELER_V30_56.txt
+@@ -0,0 +1,6 @@
++V30.56 — ASARKAYA uygulama adı
++
++- Windows masaüstü ve Başlat menüsü kısayolları ASARKAYA olarak adlandırıldı.
++- Uygulama penceresi, iPhone ana ekranı, kurulum başlığı ve görünür arayüz ASARKAYA adını kullanıyor.
++- Bilgi fişindeki marka BTDD olarak bırakıldı.
++- BTDD veri klasörü, çalıştırılabilir dosya adı, API/senkron tanımlayıcıları ve bağlantı yardımcı dosyaları geriye dönük uyumluluk için korundu.
+--- a/TEST_RAPORU_V30_56.txt
++++ b/TEST_RAPORU_V30_56.txt
+@@ -0,0 +1,9 @@
++V30.56 doğrulama raporu — 27.09.2026
++
++- ASARKAYA masaüstü/başlat menüsü, uygulama penceresi, PWA ana ekranı ve görünür marka kontrolleri geçti.
++- Bilgi fişi marka regresyonu: BTDD olarak korundu.
++- Mevcut BTDD.exe adı, kurulum/veri klasörü ve API/senkron teknik anahtarlarının korunduğu doğrulandı.
++- Marka ve sürüm metaveri testleri geçti.
++- Frontend: 53 test; ürün analizi: 10 birim ve renderer; satış analizi: 15; akıllı asistan: 8; senkron/kısayol: 7; gün sonu/veri güvenliği: 18; tablo süre vurgusu: 7; grafik geometrisi: 108 senaryo + 4 uyumluluk/kontrast testi. Tamamı geçti.
++- Statik kontrol ve ZIP bütünlük kontrolü geçti.
++- Gerçek Windows kurulum derlemesi, gerçek tarayıcı görüntü testi ve fiziksel yazıcı/kasa donanımı bu ortamda çalıştırılmadı.
+--- a/build_release.bat
++++ b/build_release.bat
+@@ -4,7 +4,7 @@
+ 
+ echo.
+ echo ==========================================
+-echo       BTDD WINDOWS RELEASE BUILDER
++echo       ASARKAYA WINDOWS RELEASE BUILDER
+ echo ==========================================
+ echo.
+ 
+@@ -73,7 +73,7 @@
+     echo ==========================================
+     echo   KURULUM DOSYASI HAZIR
+     echo ==========================================
+-    echo %CD%\release\BTDD_Setup_3.0.55.0.exe
++    echo %CD%\release\ASARKAYA_Setup_3.0.56.0.exe
+     echo.
+     start "" "%CD%\release"
+ ) else (
+--- a/index.html
++++ b/index.html
+@@ -6,11 +6,11 @@
+   <meta name="theme-color" content="#171713" />
+   <meta name="apple-mobile-web-app-capable" content="yes" />
+   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+-  <meta name="apple-mobile-web-app-title" content="BTDD" />
++  <meta name="apple-mobile-web-app-title" content="ASARKAYA" />
+   <meta name="mobile-web-app-capable" content="yes" />
+   <link rel="manifest" href="/manifest.json" />
+   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+-  <title>BTDD — Adisyon</title>
++  <title>ASARKAYA — Adisyon</title>
+   <style>
+     :root{--ink:#171713;--muted:#74746b;--paper:#eeeae0;--card:rgba(255,255,255,.72);--line:rgba(255,255,255,.56);--accent:#d76b36;--green:#3e7656;--yellow:#c7902f;--red:#b94a3f;--blue:#316b8a;--shadow:0 18px 50px rgba(35,30,23,.13);--wallpaper:linear-gradient(135deg,#d9d0bf,#f4efe5 45%,#cbc3b5)}
+     *{box-sizing:border-box} body{margin:0;background:var(--wallpaper) center/cover fixed;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}body:before{content:"";position:fixed;inset:0;background:rgba(240,237,228,.44);backdrop-filter:blur(4px);z-index:-1} button,input,select{font:inherit}
+@@ -1618,7 +1618,7 @@
+ </head>
+ <body>
+ <div class="btdd-flag" aria-hidden="true">
+-  <div class="btdd-flag-mark">BTDD</div>
++  <div class="btdd-flag-mark">ASARKAYA</div>
+   <div class="btdd-flag-line"></div>
+   
+ </div>
+@@ -1642,7 +1642,7 @@
+ <div class="bttdd-soma-logo" aria-hidden="true"></div>
+ 
+ <div class="app">
+-  <header class="topbar"><div class="brand"><div class="mark"><img src="btdd_soma_logo.png" alt="Batı Trakya Türkleri Dayanışma Derneği" decoding="async"></div><div><h1>Asarkaya</h1><span id="businessDayBadge" class="business-day-badge"></span><p>Adisyon & Masa Yönetimi</p></div></div><div class="top-actions"><button class="quick-drawer-btn" id="quickOpenDrawer" type="button" title="Para çekmecesini aç"><svg class="btdd-ui-icon action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16v9H4zM6 6h12l2 4H4z"></path><path d="M8 14h3m3 0h2M12 10v9"></path></svg><span>KASAYI AÇ</span></button><div class="chip sync-chip offline" id="syncChip"><i></i><span>Bağlantı Yok</span></div><div class="chip" id="clock"></div></div></header>
++  <header class="topbar"><div class="brand"><div class="mark"><img src="btdd_soma_logo.png" alt="Batı Trakya Türkleri Dayanışma Derneği" decoding="async"></div><div><h1>ASARKAYA</h1><span id="businessDayBadge" class="business-day-badge"></span><p>Adisyon & Masa Yönetimi</p></div></div><div class="top-actions"><button class="quick-drawer-btn" id="quickOpenDrawer" type="button" title="Para çekmecesini aç"><svg class="btdd-ui-icon action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16v9H4zM6 6h12l2 4H4z"></path><path d="M8 14h3m3 0h2M12 10v9"></path></svg><span>KASAYI AÇ</span></button><div class="chip sync-chip offline" id="syncChip"><i></i><span>Bağlantı Yok</span></div><div class="chip" id="clock"></div></div></header>
+   <div class="layout">
+     <main>
+       <div id="lastServerAck" class="last-server-ack">Bu oturumda henüz gönderim onayı yok</div>
+@@ -1672,7 +1672,7 @@
+ <div id="mobileUrlAlternatives" class="mobile-url-list"></div>
+ <button class="action" id="copyMobileUrl" style="width:100%;margin-top:8px">Ana Adresi Kopyala</button>
+ <small class="mobile-help"><b>Açılmıyorsa:</b> paketteki <b>BTDD_iPhone_Baglantisini_Ac.bat</b> dosyasını sağ tık → Yönetici olarak çalıştır. Sonra iPhone Safari’den tekrar dene.</small>
+-<small class="mobile-help">Safari → Paylaş → Ana Ekrana Ekle ile BTDD’yi uygulama gibi kullanabilirsin.</small>
++<small class="mobile-help">Safari → Paylaş → Ana Ekrana Ekle ile ASARKAYA’yı uygulama gibi kullanabilirsin.</small>
+ </article><article class="setting-panel" data-settings-group="advanced"><h3>Müşteri Ekranı</h3><button class="action primary" id="openCustomerDisplay" style="width:100%">Müşteri Ekranını Aç</button></article><article class="setting-panel" data-settings-group="security" style="grid-column:1/-1"><h3>🔐 PIN Kasası</h3><p>Kasa, satış analizi ve ürün yönetimi için birbirinden farklı 4 haneli şifreler kullanabilirsin. İlk kurulumda mevcut PIN’in üçüne de aktarılır.</p><div class="security-pin-grid">
+ <div class="security-pin-card"><h4>💵 Günlük Kasa</h4><p>Kasa ekranı, KASAYI AÇ tuşu ve iPhone bağlantısı.</p><label class="field"><span>MEVCUT</span><input id="oldCashPin" class="pin-input section-pin-input" inputmode="none" type="password" maxlength="4" readonly></label><label class="field"><span>YENİ</span><input id="newCashPin" class="pin-input section-pin-input" inputmode="none" type="password" maxlength="4" readonly></label><button class="action primary" id="changeCashPin">Kasa PIN’ini Değiştir</button></div>
+ <div class="security-pin-card"><h4>📊 Satış Analizi</h4><p>Aylık satışlar, takvim ve raporlar.</p><label class="field"><span>MEVCUT</span><input id="oldReportsPin" class="pin-input section-pin-input" inputmode="none" type="password" maxlength="4" readonly></label><label class="field"><span>YENİ</span><input id="newReportsPin" class="pin-input section-pin-input" inputmode="none" type="password" maxlength="4" readonly></label><button class="action primary" id="changeReportsPin">Rapor PIN’ini Değiştir</button></div>
+@@ -1681,7 +1681,7 @@
+ <div class="sound-control"><label class="sound-row"><span><b>Hesap alındı sesi</b><small>Ödeme tamamlanınca çalar.</small></span><span class="switch"><input type="checkbox" id="soundPayment"><i></i></span></label><select id="soundPaymentPreset" class="sound-select"><option value="success">Başarı</option><option value="cash">Kasa</option><option value="glass">Cam</option><option value="soft">Yumuşak</option><option value="digital">Dijital</option><option value="bell">Zil</option></select></div>
+ <div class="sound-control"><label class="sound-row"><span><b>Masa açıldı sesi</b><small>Yeni masa oluşturulunca çalar.</small></span><span class="switch"><input type="checkbox" id="soundTable"><i></i></span></label><select id="soundTablePreset" class="sound-select"><option value="soft">Yumuşak</option><option value="glass">Cam</option><option value="success">Başarı</option><option value="digital">Dijital</option><option value="bell">Zil</option></select></div>
+ <div class="sound-control"><label class="sound-row"><span><b>Ürün basış sesi</b><small>Her başarılı ürün eklemede tek kısa tik çalar.</small></span><span class="switch"><input type="checkbox" id="soundProduct"><i></i></span></label><select id="soundProductPreset" class="sound-select"><option value="click">Net Tik</option><option value="digital">Dijital</option><option value="glass">Cam Tik</option><option value="soft">Yumuşak</option></select></div><div class="sound-control"><label class="sound-row"><span><b>Servis uyarı sesi</b><small>Masa uyarı seviyesine ilk girdiğinde çalar.</small></span><span class="switch"><input type="checkbox" id="soundWarning"><i></i></span></label><select id="soundWarningPreset" class="sound-select"><option value="alert">Uyarı</option><option value="bell">Zil</option><option value="digital">Dijital</option><option value="soft">Yumuşak</option></select></div>
+-</div><div class="volume-row"><input type="range" id="soundVolume" min="0" max="100" step="5"><b id="soundVolumeLabel">80%</b></div><button class="action" id="testSound" style="width:100%;margin-top:10px">Seçili Sesleri Test Et</button></article><article class="setting-panel" data-settings-group="security"><h3>Yedekleme & Excel</h3><p>Dosyalar artık kaybolmayacak şekilde Windows BTDD klasörüne yazılır. Konumları aşağıda açıkça görünür.</p>
++</div><div class="volume-row"><input type="range" id="soundVolume" min="0" max="100" step="5"><b id="soundVolumeLabel">80%</b></div><button class="action" id="testSound" style="width:100%;margin-top:10px">Seçili Sesleri Test Et</button></article><article class="setting-panel" data-settings-group="security"><h3>Yedekleme & Excel</h3><p>Dosyalar Windows uygulama klasörüne güvenle yazılır. Konumları aşağıda açıkça görünür.</p>
+ <div class="storage-paths"><div><b>Ana SQLite veritabanı</b><code id="databasePath">Yol yükleniyor…</code></div><div><b>Manuel Excel + JSON</b><code id="exportsPath">Yol yükleniyor…</code></div><div><b>Otomatik günlük yedek</b><code id="dailyPath">Yol yükleniyor…</code></div><div><b>Gün sonu arşivi</b><code id="archivePath">Yol yükleniyor…</code></div></div>
+ <div class="system-actions"><button class="action primary" id="exportBoth">Excel + JSON Oluştur</button><button class="action" id="openExportFolder">Klasörü Aç</button></div><div class="backup-status" id="backupStatus">SQLite WAL + otomatik yedekleme aktif · Son 30 gün korunur</div></article><article class="setting-panel exit-panel" data-settings-group="advanced">
+ <h3>Çıkış</h3>
+@@ -1777,7 +1777,7 @@
+ </div></div>
+ 
+ <div class="modal-wrap" id="exitModal"><div class="modal" style="width:min(460px,100%)">
+-<h3 id="exitModalTitle">BTDD kapatılsın mı?</h3>
++<h3 id="exitModalTitle">ASARKAYA kapatılsın mı?</h3>
+ <p class="table-meta" id="exitModalText">Açık masalar ve kayıtlar korunacaktır.</p>
+ <div class="modal-actions">
+   <button class="action" data-close="exitModal">Vazgeç</button>
+@@ -1785,8 +1785,8 @@
+ </div>
+ </div></div>
+ <div class="modal-wrap" id="mobileConnectModal"><div class="modal" style="width:min(460px,100%)">
+-<h3>📱 BTDD’ye Bağlan</h3>
+-<p class="table-meta">Bu iPhone’u BTDD’ye bağlamak için Günlük Kasa bölümünün 4 haneli PIN’ini gir.</p>
++<h3>📱 ASARKAYA’ya Bağlan</h3>
++<p class="table-meta">Bu iPhone’u ASARKAYA’ya bağlamak için Günlük Kasa bölümünün 4 haneli PIN’ini gir.</p>
+ <label class="field"><span>YÖNETİCİ PIN</span><input id="mobilePinInput" class="pin-input pin-display" inputmode="none" type="password" maxlength="4" autocomplete="off" readonly data-pin-pad="mobile" aria-label="Yönetici PIN"></label>
+ <div class="pin-keypad" data-pin-target="mobilePinInput" data-pin-submit="connectMobile"></div>
+ <div class="modal-actions"><button class="action primary" id="connectMobile">Bağlan</button></div>
+@@ -1905,7 +1905,7 @@
+ emoji:typeof p.emoji==='string'?p.emoji.slice(0,16):''
+ }));state.background=typeof state.background==='string'?state.background:'';state.theme=typeof state.theme==='string'?state.theme:'cream';const legacyCashPin=/^\d{4}$/.test(String(state.cashPin||''))?String(state.cashPin):'1234';const rawSectionPins=(state.sectionPins&&typeof state.sectionPins==='object'&&!Array.isArray(state.sectionPins))?state.sectionPins:{};const cleanSectionPin=v=>/^\d{4}$/.test(String(v||''))?String(v):legacyCashPin;state.sectionPins={cash:cleanSectionPin(rawSectionPins.cash),reports:cleanSectionPin(rawSectionPins.reports),products:cleanSectionPin(rawSectionPins.products)};state.cashPin=state.sectionPins.cash;if(!Array.isArray(state.closedDays))state.closedDays=[];if(!Array.isArray(state.expenses))state.expenses=[];state.auditLog=Array.isArray(state.auditLog)?state.auditLog:[];const rawCashSession=(state.cashSession&&typeof state.cashSession==='object'&&!Array.isArray(state.cashSession))?state.cashSession:{};state.cashSession={openingFloat:0,setAt:Date.now(),...rawCashSession};
+ state.sales=state.sales.map(s=>({...s,items:Array.isArray(s.items)?s.items:[],total:Number(s.total)||0}));
+-state.closedDays=state.closedDays.map(d=>({...d,sales:Array.isArray(d?.sales)?d.sales:[],expenses:Array.isArray(d?.expenses)?d.expenses:[]}));state.dayOpenedAt=Number(state.dayOpenedAt)||Date.now();state.warnMinutes=state.warnMinutes||15;state.alertMinutes=state.alertMinutes||20;const rawUiOptions=(state.uiOptions&&typeof state.uiOptions==='object'&&!Array.isArray(state.uiOptions))?state.uiOptions:{};state.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...rawUiOptions};const rawSoundOptions=(state.soundOptions&&typeof state.soundOptions==='object'&&!Array.isArray(state.soundOptions))?state.soundOptions:{};state.soundOptions={payment:true,table:true,warning:true,product:true,volume:80,paymentPreset:'success',tablePreset:'soft',warningPreset:'alert',productPreset:'click',...rawSoundOptions};state.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(state.soundOptions.volume))?Number(state.soundOptions.volume):80));state.warnMinutes=Math.max(1,Number(state.warnMinutes)||15);state.alertMinutes=Math.max(state.warnMinutes+1,Number(state.alertMinutes)||20);state.updatedAt=Math.max(0,Number(state.updatedAt)||0);const rawAssistantOptions=(state.assistantOptions&&typeof state.assistantOptions==='object'&&!Array.isArray(state.assistantOptions))?state.assistantOptions:{};state.assistantOptions={enabled:true,stock:true,sales:true,finance:true,operations:true,limit:5,...rawAssistantOptions};state.assistantOptions.limit=[3,5,8].includes(Number(state.assistantOptions.limit))?Number(state.assistantOptions.limit):5;const visibleThemes=['yellow','cream','custom'];if(!visibleThemes.includes(state.theme))state.theme='yellow';removeDuplicateOrderImages(state);if(!state.theme)state.theme='yellow';state.version='3.0.55.0';let selected=null,receiptSize=80,receiptSnapshot=null,editingProductId=null,pendingProtectedScreen='cashScreen',pendingProtectedAction='screen',pendingProtectedPinType='cash',reportTab='current',quickCategory='Hızlı Satanlar',quickProductPage=0,pendingProductImage='',removeProductImageRequested=false,pendingRemoveItemId=null,pendingRemoveReason='Yanlış basıldı',splitSelection={},splitOpenRevision=0,pendingPaymentTotal=0,productBulkMode=false,productBulkSelection=new Set(),settingsActiveTab='general',settingsSecurityUnlocked=false,pendingCancelReason='Yanlış masa';const QUICK_PRODUCT_PAGE_SIZE=10;
++state.closedDays=state.closedDays.map(d=>({...d,sales:Array.isArray(d?.sales)?d.sales:[],expenses:Array.isArray(d?.expenses)?d.expenses:[]}));state.dayOpenedAt=Number(state.dayOpenedAt)||Date.now();state.warnMinutes=state.warnMinutes||15;state.alertMinutes=state.alertMinutes||20;const rawUiOptions=(state.uiOptions&&typeof state.uiOptions==='object'&&!Array.isArray(state.uiOptions))?state.uiOptions:{};state.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...rawUiOptions};const rawSoundOptions=(state.soundOptions&&typeof state.soundOptions==='object'&&!Array.isArray(state.soundOptions))?state.soundOptions:{};state.soundOptions={payment:true,table:true,warning:true,product:true,volume:80,paymentPreset:'success',tablePreset:'soft',warningPreset:'alert',productPreset:'click',...rawSoundOptions};state.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(state.soundOptions.volume))?Number(state.soundOptions.volume):80));state.warnMinutes=Math.max(1,Number(state.warnMinutes)||15);state.alertMinutes=Math.max(state.warnMinutes+1,Number(state.alertMinutes)||20);state.updatedAt=Math.max(0,Number(state.updatedAt)||0);const rawAssistantOptions=(state.assistantOptions&&typeof state.assistantOptions==='object'&&!Array.isArray(state.assistantOptions))?state.assistantOptions:{};state.assistantOptions={enabled:true,stock:true,sales:true,finance:true,operations:true,limit:5,...rawAssistantOptions};state.assistantOptions.limit=[3,5,8].includes(Number(state.assistantOptions.limit))?Number(state.assistantOptions.limit):5;const visibleThemes=['yellow','cream','custom'];if(!visibleThemes.includes(state.theme))state.theme='yellow';removeDuplicateOrderImages(state);if(!state.theme)state.theme='yellow';state.version='3.0.56.0';let selected=null,receiptSize=80,receiptSnapshot=null,editingProductId=null,pendingProtectedScreen='cashScreen',pendingProtectedAction='screen',pendingProtectedPinType='cash',reportTab='current',quickCategory='Hızlı Satanlar',quickProductPage=0,pendingProductImage='',removeProductImageRequested=false,pendingRemoveItemId=null,pendingRemoveReason='Yanlış basıldı',splitSelection={},splitOpenRevision=0,pendingPaymentTotal=0,productBulkMode=false,productBulkSelection=new Set(),settingsActiveTab='general',settingsSecurityUnlocked=false,pendingCancelReason='Yanlış masa';const QUICK_PRODUCT_PAGE_SIZE=10;
+ const BTDD_CUSTOMER_ACTIVE_KEY='btdd-customer-active-table';
+ let manageProductPage=0;const MANAGE_PRODUCT_PAGE_SIZE=60;
+ const nowForCalendar=new Date();
+@@ -2045,7 +2045,7 @@
+   saved.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(saved.soundOptions.volume))?Number(saved.soundOptions.volume):80));const savedUi=(saved.uiOptions&&typeof saved.uiOptions==='object'&&!Array.isArray(saved.uiOptions))?saved.uiOptions:{};saved.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...savedUi};saved.uiOptions.glassOpacity=Math.max(55,Math.min(92,Number(saved.uiOptions.glassOpacity)||78));
+   removeDuplicateOrderImages(saved);
+   BtddSafety.normalize(saved);
+-  saved.version='3.0.55.0';
++  saved.version='3.0.56.0';
+   return saved
+ }
+ function applySyncedState(saved,revision,quiet=true,epoch=null){
+@@ -3616,7 +3616,7 @@
+ };
+ function btddDateKey(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`}
+ function btddDownload(name,text,type){const blob=new Blob([text],{type:type||'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200)}
+-function downloadBackupFile(){const pack={app:'BTDD',version:'3.0.55.0',exportedAt:new Date().toISOString(),data:state};btddDownload('BTDD-Yedek-'+btddDateKey()+'.json',JSON.stringify(pack,null,2));toast('Yedek dosyası hazırlandı')}
++function downloadBackupFile(){const pack={app:'BTDD',version:'3.0.56.0',exportedAt:new Date().toISOString(),data:state};btddDownload('BTDD-Yedek-'+btddDateKey()+'.json',JSON.stringify(pack,null,2));toast('Yedek dosyası hazırlandı')}
+ function xesc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
+ function xcell(v,t='String'){return `<Cell><Data ss:Type="${t}">${xesc(v)}</Data></Cell>`}function xsheet(n,rows){return `<Worksheet ss:Name="${xesc(n)}"><Table>${rows.map(r=>'<Row>'+r.map(c=>xcell(c.v,c.t||'String')).join('')+'</Row>').join('')}</Table></Worksheet>`}
+ function exportExcelFile(){
+@@ -3836,10 +3836,10 @@
+ }
+ $('#appExitButton').onclick=()=>{
+   const desktop=isDesktopBTDD();
+-  $('#exitModalTitle').textContent=desktop?'BTDD kapatılsın mı?':'iPhone oturumu kapatılsın mı?';
++  $('#exitModalTitle').textContent=desktop?'ASARKAYA kapatılsın mı?':'iPhone oturumu kapatılsın mı?';
+   $('#exitModalText').textContent=desktop
+     ?'Açık masalar ve kayıtlar korunacaktır.'
+-    :'Bu telefondaki BTDD yönetici oturumundan çıkış yapılacaktır.';
++    :'Bu telefondaki ASARKAYA yönetici oturumundan çıkış yapılacaktır.';
+   $('#confirmAppExit').textContent=desktop?'Uygulamayı Kapat':'Çıkış Yap';
+   $('#exitModal').classList.add('open')
+ };
+@@ -3850,7 +3850,7 @@
+       const saved=await flushFastStateSave();
+       if(saved?.ok===false){toast('Son kayıt tamamlanamadı; uygulama açık tutuldu');return}
+       $('#exitModal').classList.remove('open');
+-      toast('BTDD güvenli şekilde kapatılıyor…');
++      toast('ASARKAYA güvenli şekilde kapatılıyor…');
+       let closed=false;
+       try{
+         // Use HTTP so the response can finish before the process exits; avoids pywebview RPC crash races.
+--- a/installer.iss
++++ b/installer.iss
+@@ -1,6 +1,6 @@
+-#define MyAppName "BTDD"
+-#define MyAppVersion "3.0.55.0"
+-#define MyAppPublisher "BTDD"
++#define MyAppName "ASARKAYA"
++#define MyAppVersion "3.0.56.0"
++#define MyAppPublisher "ASARKAYA"
+ #define MyAppExeName "BTDD.exe"
+ 
+ [Setup]
+@@ -9,10 +9,10 @@
+ AppVersion={#MyAppVersion}
+ AppPublisher={#MyAppPublisher}
+ DefaultDirName={autopf}\BTDD
+-DefaultGroupName=BTDD
++DefaultGroupName=ASARKAYA
+ DisableProgramGroupPage=yes
+ OutputDir=release
+-OutputBaseFilename=BTDD_Setup_{#MyAppVersion}
++OutputBaseFilename=ASARKAYA_Setup_{#MyAppVersion}
+ SetupIconFile=btdd.ico
+ UninstallDisplayIcon={app}\{#MyAppExeName}
+ Compression=lzma2/max
+@@ -30,14 +30,18 @@
+ Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
+ 
+ [Tasks]
+-Name: "desktopicon"; Description: "Masaüstüne BTDD kısayolu oluştur"; GroupDescription: "Kısayollar:"; Flags: unchecked
++Name: "desktopicon"; Description: "Masaüstüne ASARKAYA kısayolu oluştur"; GroupDescription: "Kısayollar:"; Flags: unchecked
++
++[InstallDelete]
++Type: files; Name: "{autodesktop}\BTDD.lnk"
++Type: files; Name: "{autoprograms}\BTDD.lnk"
+ 
+ [Files]
+ Source: "dist\BTDD.exe"; DestDir: "{app}"; Flags: ignoreversion
+ 
+ [Icons]
+-Name: "{autoprograms}\BTDD"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"
+-Name: "{autodesktop}\BTDD"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; WorkingDir: "{app}"
++Name: "{autoprograms}\ASARKAYA"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"
++Name: "{autodesktop}\ASARKAYA"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; WorkingDir: "{app}"
+ 
+ [Run]
+-Filename: "{app}\{#MyAppExeName}"; Description: "BTDD'yi şimdi aç"; Flags: nowait postinstall skipifsilent
++Filename: "{app}\{#MyAppExeName}"; Description: "ASARKAYA'yı şimdi aç"; Flags: nowait postinstall skipifsilent
+--- a/launcher.py
++++ b/launcher.py
+@@ -667,7 +667,7 @@
+                     pass
+                 return {"ok":True,"already_open":True}
+             w=webview.create_window(
+-                "BTDD Müşteri Ekranı",f"http://127.0.0.1:{PORT}/?customer=display",
++                "ASARKAYA Müşteri Ekranı",f"http://127.0.0.1:{PORT}/?customer=display",
+                 width=1100,height=760,min_size=(720,500),resizable=True,fullscreen=False,js_api=self
+             )
+             self.customer_window=w
+@@ -1015,8 +1015,8 @@
+     try:
+         MB_YESNO=0x4;MB_ICONQUESTION=0x20;MB_DEFBUTTON2=0x100;IDYES=6
+         result=ctypes.windll.user32.MessageBoxW(
+-            0,"BTDD uygulaması kapatılsın mı?\n\niPhone eş zamanlı bağlantısı da kapanacaktır.",
+-            "BTDD",MB_YESNO|MB_ICONQUESTION|MB_DEFBUTTON2)
++            0,"ASARKAYA uygulaması kapatılsın mı?\n\niPhone eş zamanlı bağlantısı da kapanacaktır.",
++            "ASARKAYA",MB_YESNO|MB_ICONQUESTION|MB_DEFBUTTON2)
+         if result!=IDYES:return False
+     except Exception:pass
+     return True
+@@ -1024,7 +1024,7 @@
+ if __name__=="__main__":
+     server=start_server()
+     window=webview.create_window(
+-        "BTDD",f"http://127.0.0.1:{PORT}/",
++        "ASARKAYA",f"http://127.0.0.1:{PORT}/",
+         width=1440,height=900,min_size=(1000,650),
+         resizable=True,fullscreen=True,js_api=api
+     )
+--- a/manifest.json
++++ b/manifest.json
+@@ -1,6 +1,6 @@
+ {
+-  "name": "BTDD Adisyon",
+-  "short_name": "BTDD",
++  "name": "ASARKAYA Adisyon",
++  "short_name": "ASARKAYA",
+   "start_url": "/",
+   "display": "standalone",
+   "background_color": "#0B0C0F",
+--- a/tests/test_asarkaya_branding.cjs
++++ b/tests/test_asarkaya_branding.cjs
+@@ -0,0 +1,29 @@
++const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
++const root=path.join(__dirname,'..');
++const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
++const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.json'),'utf8'));
++const installer=fs.readFileSync(path.join(root,'installer.iss'),'utf8');
++const launcher=fs.readFileSync(path.join(root,'launcher.py'),'utf8');
++const version=fs.readFileSync(path.join(root,'version_info.txt'),'utf8');
++assert(html.includes('<title>ASARKAYA — Adisyon</title>'));
++assert(html.includes('apple-mobile-web-app-title" content="ASARKAYA"'));
++assert(html.includes('<h1>ASARKAYA</h1>'));
++assert(html.includes('<div class="btdd-flag-mark">ASARKAYA</div>'));
++assert.equal(manifest.name,'ASARKAYA Adisyon');
++assert.equal(manifest.short_name,'ASARKAYA');
++assert(installer.includes('#define MyAppName "ASARKAYA"'));
++assert(installer.includes('{autodesktop}\\ASARKAYA'));
++assert(installer.includes('{autoprograms}\\ASARKAYA'));
++assert(installer.includes('Name: "{autodesktop}\\BTDD.lnk"'));
++assert(installer.includes('Name: "{autoprograms}\\BTDD.lnk"'));
++assert(installer.includes('Source: "dist\\BTDD.exe"'));
++assert(installer.includes('DefaultDirName={autopf}\\BTDD'));
++assert(launcher.includes('webview.create_window(\n        "ASARKAYA"'));
++assert(launcher.includes('"ASARKAYA Müşteri Ekranı"'));
++assert(launcher.includes('Path(appdata) / "BTDD"'));
++const receipt=html.match(/function receiptBody\([\s\S]*?\n/)[0];
++assert(receipt.includes('class="receipt-brand">BTDD</div>'));
++assert(!receipt.includes('ASARKAYA'));
++assert(html.includes("state.version='3.0.56.0'"));
++assert(version.includes('filevers=(3, 0, 56, 0)'));
++console.log('ASARKAYA branding, BTDD receipt, legacy paths, and release metadata checks passed');
+--- a/tests/test_frontend.cjs
++++ b/tests/test_frontend.cjs
+@@ -68,7 +68,7 @@
+ test('Physical product gesture has ghost-click suppression',()=>{assert(htmlAll.includes('suppressSyntheticClickUntil'));assert(htmlAll.includes('gestureConsumed=true'));assert(htmlAll.includes('BTDD_DUPLICATE_TAP_MS=140'))});
+ test('Day close uses deterministic business-session id',()=>{assert(htmlAll.includes("id:'dayclose-'"));assert(htmlAll.includes('dayCloseInFlight'))});
+ 
+-test('V30.38 keeps simple themes and migrates removed themes safely',()=>{assert(html.includes("const visibleThemes=['yellow','cream','custom']"));assert(html.includes("if(!visibleThemes.includes(state.theme))state.theme='yellow'"));assert(!html.includes("if(!state.theme||state.theme==='yellow')state.theme='green'"));assert(html.includes("saved.version='3.0.55.0'"));assert(html.includes("version:'3.0.55.0',exportedAt"))});
++test('V30.38 keeps simple themes and migrates removed themes safely',()=>{assert(html.includes("const visibleThemes=['yellow','cream','custom']"));assert(html.includes("if(!visibleThemes.includes(state.theme))state.theme='yellow'"));assert(!html.includes("if(!state.theme||state.theme==='yellow')state.theme='green'"));assert(html.includes("saved.version='3.0.56.0'"));assert(html.includes("version:'3.0.56.0',exportedAt"))});
+ 
+ test('Unified header, custom palette, and assistant settings are present',()=>{assert(html.includes('body .screen .hero{background:transparent!important'));for(const id of ['colorPaper','colorSurface','colorAccent','saveCustomColors','assistantEnabled','assistantStock','assistantSales','assistantFinance','assistantLimit','saveAssistantSettings'])assert(html.includes('id="'+id+'"'));assert(html.includes('function customTheme()'));assert(html.includes('function renderAssistantSettings()'))});
+ 
+@@ -76,7 +76,7 @@
+ test('V30.38 assistant has separate operations control',()=>{assert(html.includes('id="assistantOperations"'));assert(html.includes('operations:true'));assert(html.includes('operationTitles'));assert(html.includes("['assistantOperations','operations']"))});
+ 
+ test('V30.39 custom palette shows live contrast safety status',()=>{assert(html.includes('id="colorContrastStatus"'));assert(html.includes('function renderColorContrastStatus()'));assert(html.includes('surfaceRatio>=4.5&&accentRatio>=4.5'));assert(html.includes('renderColorContrastStatus()'))});
+-test('V30.39 release pipeline version labels are aligned',()=>{const installer=fs.readFileSync(path.join(__dirname,'../installer.iss'),'utf8'),build=fs.readFileSync(path.join(__dirname,'../build_release.bat'),'utf8'),vi=fs.readFileSync(path.join(__dirname,'../version_info.txt'),'utf8');assert(installer.includes('#define MyAppVersion "3.0.55.0"'));assert(build.includes('BTDD_Setup_3.0.55.0.exe'));assert(vi.includes('filevers=(3, 0, 55, 0)'));assert(vi.includes('prodvers=(3, 0, 55, 0)'))});
++test('V30.39 release pipeline version labels are aligned',()=>{const installer=fs.readFileSync(path.join(__dirname,'../installer.iss'),'utf8'),build=fs.readFileSync(path.join(__dirname,'../build_release.bat'),'utf8'),vi=fs.readFileSync(path.join(__dirname,'../version_info.txt'),'utf8');assert(installer.includes('#define MyAppVersion "3.0.56.0"'));assert(build.includes('ASARKAYA_Setup_3.0.56.0.exe'));assert(vi.includes('filevers=(3, 0, 56, 0)'));assert(vi.includes('prodvers=(3, 0, 56, 0)'))});
+ 
+ test('V30.40 assistant shows a compact daily priority summary without mutating data',()=>{assert(html.includes('class=\"today-focus\"'));assert(html.includes('Bugün dikkat et'));assert(html.includes("sorted.slice(0,3).map(x=>esc(x.title)).join(' · ')"));assert(html.includes('Asistan kayıtları değiştirmez'))});
+ 
+--- a/version_info.txt
++++ b/version_info.txt
+@@ -1,7 +1,7 @@
+ VSVersionInfo(
+   ffi=FixedFileInfo(
+-    filevers=(3, 0, 55, 0),
+-    prodvers=(3, 0, 55, 0),
++    filevers=(3, 0, 56, 0),
++    prodvers=(3, 0, 56, 0),
+     mask=0x3f,
+     flags=0x0,
+     OS=0x40004,
+@@ -14,14 +14,14 @@
+       StringTable(
+         '040904B0',
+         [
+-          StringStruct('CompanyName', 'BTDD'),
+-          StringStruct('FileDescription', 'BTDD Adisyon ve Masa Yönetimi'),
+-          StringStruct('FileVersion', '3.0.55.0'),
++          StringStruct('CompanyName', 'ASARKAYA'),
++          StringStruct('FileDescription', 'ASARKAYA Adisyon ve Masa Yönetimi'),
++          StringStruct('FileVersion', '3.0.56.0'),
+           StringStruct('InternalName', 'BTDD'),
+           StringStruct('LegalCopyright', 'BTDD'),
+           StringStruct('OriginalFilename', 'BTDD.exe'),
+-          StringStruct('ProductName', 'BTDD'),
+-          StringStruct('ProductVersion', '3.0.55.0')
++          StringStruct('ProductName', 'ASARKAYA'),
++          StringStruct('ProductVersion', '3.0.56.0')
+         ]
+       )
+     ]),
