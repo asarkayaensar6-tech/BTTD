@@ -1,0 +1,297 @@
+--- a/BTDD_KONTROL.py
++++ b/BTDD_KONTROL.py
+@@ -10,7 +10,7 @@
+ for required in ['/api/state','/api/archive-day','/api/shutdown','/sounds/success.wav']:
+     if required not in html and required.startswith('/sounds/'): errors.append('Eksik ses dosyasi kullanimi: '+required)
+     elif required not in html and not required.startswith('/sounds/'): errors.append('Eksik API kullanimi: '+required)
+-if "state.version='3.0.56.0'" not in html: errors.append('Surum etiketi 3.0.56.0 degil')
++if "state.version='3.0.57.0'" not in html: errors.append('Surum etiketi 3.0.57.0 degil')
+ manifest=(base/'manifest.json').read_text(encoding='utf-8')
+ installer=(base/'installer.iss').read_text(encoding='utf-8')
+ if '<title>ASARKAYA — Adisyon</title>' not in html or 'apple-mobile-web-app-title\" content=\"ASARKAYA' not in html: errors.append('ASARKAYA gorunen web uygulama adi eksik')
+@@ -18,6 +18,8 @@
+ if '\"short_name\": \"ASARKAYA\"' not in manifest: errors.append('Ana ekran kisa adi ASARKAYA degil')
+ if '{autodesktop}\\ASARKAYA' not in installer: errors.append('Windows masaustu kisayol adi ASARKAYA degil')
+ if 'DefaultDirName={autopf}\\BTDD' not in installer: errors.append('Mevcut kurulum yolu geriye donuk uyumluluk icin korunmadi')
++if 'SetupIconFile=asarkaya.ico' not in installer or 'Flags: unchecked' in installer: errors.append('ASARKAYA setup ikonu veya varsayilan masaustu kisayolu eksik')
++if 'id=\"startupSplash\"' not in html or 'setTimeout(dismissStartupSplash,2400)' not in html: errors.append('ASARKAYA acilis perdesi guvenli geri donusu eksik')
+ for required in ['id="unitSalesAnchor"','id="unitSalesRows"','function productUnitSales(','MASA AÇIK','SON SERVİS','body .table-card.warn','body .table-card.alert']:
+     if required not in html: errors.append('V30.53 masa sure/urun adet analizi eksik: '+required)
+ for required in ['function productSalesAnalysis(','id="unitSalesPeriod"','id="unitSalesFrom"','id="unitSalesTo"','id="unitSalesKpis"','id="unitSalesCategorySummary"','Bu dönemdeki satış satırları','UNIT_SALES_PAGE_SIZE=40']:
+@@ -40,8 +42,13 @@
+ if 'winsound.Beep' not in launcher: errors.append('Windows native Beep ses API eksik')
+ if 'winsound.PlaySound' not in launcher: errors.append('Windows WAV ses yedegi eksik')
+ if 'safe.startswith("sounds/")' not in launcher: errors.append('HTTP ses dosyasi servisi eksik')
++for fname,size in [('icon-192.png',192),('icon-512.png',512),('apple-touch-icon.png',180)]:
++    p=base/fname
++    if not p.exists() or p.read_bytes()[:8]!=b'\x89PNG\r\n\x1a\n' or int.from_bytes(p.read_bytes()[16:20],'big')!=size: errors.append('Gecersiz ASARKAYA PWA ikonu: '+fname)
++if not (base/'asarkaya.ico').exists() or not (base/'asarkaya-mark.svg').exists(): errors.append('ASARKAYA ikon kaynak dosyalari eksik')
+ build=(base/'build_release.bat').read_text(encoding='utf-8')
+ if '--add-data "sounds;sounds"' not in build: errors.append('EXE derlemesine sounds klasoru eklenmemis')
++if '--icon "asarkaya.ico"' not in build: errors.append('ASARKAYA ikonu Windows EXE derlemesine baglanmamis')
+ 
+ for required in ['cashPinInput','mobilePinInput','oldCashPin','newCashPin','oldReportsPin','newReportsPin','oldProductsPin','newProductsPin','settingsPinKeypad']:
+     if f'id="{required}"' not in html: errors.append('Eksik PIN/dokunmatik ogesi: '+required)
+@@ -77,7 +84,7 @@
+ if '<=55)state.soundOptions.volume=80' in html: errors.append('Dusuk ses seviyesini zorla 80 yapan eski hata geri gelmis')
+ if '_quarantine_corrupt_db' not in launcher or 'CorruptBackups' not in launcher: errors.append('Bozuk SQLite otomatik kurtarma eksik')
+ version_info=(base/'version_info.txt').read_text(encoding='utf-8')
+-if 'filevers=(3, 0, 56, 0)' not in version_info or 'prodvers=(3, 0, 56, 0)' not in version_info: errors.append('Windows sayisal surum bilgisi 3.0.56.0 degil')
++if 'filevers=(3, 0, 57, 0)' not in version_info or 'prodvers=(3, 0, 57, 0)' not in version_info: errors.append('Windows sayisal surum bilgisi 3.0.57.0 degil')
+ 
+ 
+ # V30.54 sade ayarlar ve kullanılmayan gezinme tekrarları
+@@ -180,5 +187,5 @@
+ print('- Toplu urun silme + hesap iptal PIN guvenligi: OK')
+ print('- Saydam/cam arayuz + kilitli ayarlar: OK')
+ print('- BTDD Sound 2.0 (8 ses): OK')
+-print('- Windows sayisal surum bilgisi: 3.0.56.0')
+-print('- Surum: 3.0.56.0')
++print('- Windows sayisal surum bilgisi: 3.0.57.0')
++print('- Surum: 3.0.57.0')
+--- a/DUZELTMELER_V30_57.txt
++++ b/DUZELTMELER_V30_57.txt
+@@ -0,0 +1,6 @@
++V30.57 — ASARKAYA uygulama simgesi ve açılış
++
++- ASARKAYA monogramı içeren koyu-altın premium uygulama simgesi Windows EXE/kurulumuna, PWA ikonlarına ve iPhone ana ekran ikonuna eklendi.
++- Açılışta erişilebilir ASARKAYA karşılama perdesi gösterilir; güvenli durum yüklenince kapanır ve her koşulda 2,4 saniyede kendiliğinden kaybolur.
++- Kurulumda masaüstü kısayolu varsayılan olarak seçili hale getirildi. Eski BTDD kısayolu yükseltme sırasında temizlenir.
++- Bilgi fişi BTDD markasını korur; kayıt/senkron akışı değiştirilmedi.
+--- a/TEST_RAPORU_V30_57.txt
++++ b/TEST_RAPORU_V30_57.txt
+@@ -0,0 +1,8 @@
++V30.57 doğrulama raporu — 28.09.2026
++
++- ASARKAYA Windows/PWA/iPhone ikon seti PNG/ICO başlık ve ölçü kontrollerinden geçti; ikon görünümü ayrıca görsel olarak incelendi.
++- Açılış ekranı erken veri yüklemesi tamamlandığında kapanma ve 2,4 saniyelik güvenli zaman aşımı testlerinden geçti.
++- Kurulum kısayolunun varsayılan seçili olması ve ASARKAYA ikonu doğrulandı; BTDD bilgi fişi adı korundu.
++- Frontend: 53 test; ürün analizi: 10 birim + renderer; satış analizi: 15; akıllı asistan: 8; senkron/kısayol: 7; gün sonu/veri güvenliği: 18; masa uyarısı: 7; grafik: 108 geometri + 4 uyumluluk/kontrast testi. Tamamı geçti.
++- Statik kontrol, V30.56 tabanına yama uygulama ve ZIP bütünlüğü geçti.
++- Gerçek Windows EXE/kurulum derlemesi, iPhone Safari ve fiziksel kasa/yazıcı testi bu ortamda yapılmadı.
+--- a/asarkaya-mark.svg
++++ b/asarkaya-mark.svg
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><rect x="32" y="32" width="960" height="960" rx="232" fill="#171713"/><rect x="48" y="48" width="928" height="928" rx="218" fill="none" stroke="#c9a45d" stroke-width="10"/><path d="M512 170 846 820h-145L512 441 323 820H178z" fill="#d9b969"/><path d="m512 365 127 248H385z" fill="#171713"/><path d="M348 622h328l49 92H299z" fill="#d9b969"/><text x="512" y="882" text-anchor="middle" fill="#f3ead0" font-family="Arial,sans-serif" font-size="62" font-weight="700" letter-spacing="10">ASARKAYA</text></svg>
+\ No newline at end of file
+--- a/build_release.bat
++++ b/build_release.bat
+@@ -38,10 +38,11 @@
+   --windowed ^
+   --onefile ^
+   --name "BTDD" ^
+-  --icon "btdd.ico" ^
++  --icon "asarkaya.ico" ^
+   --version-file "version_info.txt" ^
+   --add-data "index.html;." ^
+   --add-data "btdd-safety.js;." ^
++  --add-data "asarkaya-mark.svg;." ^
+   --add-data "bttdd-resmi-logo.png;." ^
+   --add-data "bttdd-resmi-logo-hq.png;." ^
+   --add-data "bttdd-resmi-logo.svg;." ^
+@@ -73,7 +74,7 @@
+     echo ==========================================
+     echo   KURULUM DOSYASI HAZIR
+     echo ==========================================
+-    echo %CD%\release\ASARKAYA_Setup_3.0.56.0.exe
++    echo %CD%\release\ASARKAYA_Setup_3.0.57.0.exe
+     echo.
+     start "" "%CD%\release"
+ ) else (
+--- a/index.html
++++ b/index.html
+@@ -1615,8 +1615,16 @@
+ @media(max-width:560px){.unit-sales-history-list>div{display:grid;gap:3px}.unit-sales-history-list b{text-align:left;white-space:normal}}
+ .unit-sales-pager{display:flex;justify-content:center;align-items:center;gap:10px;margin:12px 0}.unit-sales-pager span{font-size:11px;color:var(--muted);font-weight:850}.unit-sales-pager button:disabled{opacity:.45;cursor:default}
+ </style>
++<style id="asarkaya-v30-57-startup-brand">
++.startup-splash{position:fixed;z-index:10000;inset:0;display:grid;place-items:center;padding:calc(24px + env(safe-area-inset-top)) calc(24px + env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) calc(24px + env(safe-area-inset-left));background:radial-gradient(ellipse at 50% 42%,#343126 0,#20201b 42%,#131410 100%);color:#f3ead0;opacity:1;visibility:visible;transition:opacity .32s ease,visibility .32s ease}
++.startup-splash.is-dismissed{opacity:0;visibility:hidden;pointer-events:none}.startup-splash[hidden]{display:none!important}.startup-card{display:grid;justify-items:center;gap:13px;width:min(310px,100%);text-align:center}.startup-card img{width:clamp(112px,30vw,164px);height:auto;filter:drop-shadow(0 12px 32px rgba(0,0,0,.38))}.startup-card strong{font-size:clamp(19px,5vw,24px);font-weight:900;letter-spacing:.14em}.startup-card span{font-size:12px;letter-spacing:.04em;color:#c9c3b3}.startup-loader{width:26px;height:26px;margin-top:8px;border:2px solid rgba(217,185,105,.25);border-top-color:#d9b969;border-radius:50%;animation:asarkaya-spin .85s linear infinite}@keyframes asarkaya-spin{to{transform:rotate(360deg)}}
++@media(prefers-reduced-motion:reduce){.startup-splash{transition:none}.startup-loader{animation:none;border-color:#d9b969}}
++</style>
+ </head>
+ <body>
++<div class="startup-splash" id="startupSplash" role="status" aria-live="polite" aria-label="ASARKAYA başlatılıyor">
++ <div class="startup-card"><img src="icon-192.png" alt="ASARKAYA"><strong>ASARKAYA</strong><span>Adisyon & Masa Yönetimi</span><i class="startup-loader" aria-hidden="true"></i></div>
++</div>
+ <div class="btdd-flag" aria-hidden="true">
+   <div class="btdd-flag-mark">ASARKAYA</div>
+   <div class="btdd-flag-line"></div>
+@@ -1905,7 +1913,7 @@
+ emoji:typeof p.emoji==='string'?p.emoji.slice(0,16):''
+ }));state.background=typeof state.background==='string'?state.background:'';state.theme=typeof state.theme==='string'?state.theme:'cream';const legacyCashPin=/^\d{4}$/.test(String(state.cashPin||''))?String(state.cashPin):'1234';const rawSectionPins=(state.sectionPins&&typeof state.sectionPins==='object'&&!Array.isArray(state.sectionPins))?state.sectionPins:{};const cleanSectionPin=v=>/^\d{4}$/.test(String(v||''))?String(v):legacyCashPin;state.sectionPins={cash:cleanSectionPin(rawSectionPins.cash),reports:cleanSectionPin(rawSectionPins.reports),products:cleanSectionPin(rawSectionPins.products)};state.cashPin=state.sectionPins.cash;if(!Array.isArray(state.closedDays))state.closedDays=[];if(!Array.isArray(state.expenses))state.expenses=[];state.auditLog=Array.isArray(state.auditLog)?state.auditLog:[];const rawCashSession=(state.cashSession&&typeof state.cashSession==='object'&&!Array.isArray(state.cashSession))?state.cashSession:{};state.cashSession={openingFloat:0,setAt:Date.now(),...rawCashSession};
+ state.sales=state.sales.map(s=>({...s,items:Array.isArray(s.items)?s.items:[],total:Number(s.total)||0}));
+-state.closedDays=state.closedDays.map(d=>({...d,sales:Array.isArray(d?.sales)?d.sales:[],expenses:Array.isArray(d?.expenses)?d.expenses:[]}));state.dayOpenedAt=Number(state.dayOpenedAt)||Date.now();state.warnMinutes=state.warnMinutes||15;state.alertMinutes=state.alertMinutes||20;const rawUiOptions=(state.uiOptions&&typeof state.uiOptions==='object'&&!Array.isArray(state.uiOptions))?state.uiOptions:{};state.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...rawUiOptions};const rawSoundOptions=(state.soundOptions&&typeof state.soundOptions==='object'&&!Array.isArray(state.soundOptions))?state.soundOptions:{};state.soundOptions={payment:true,table:true,warning:true,product:true,volume:80,paymentPreset:'success',tablePreset:'soft',warningPreset:'alert',productPreset:'click',...rawSoundOptions};state.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(state.soundOptions.volume))?Number(state.soundOptions.volume):80));state.warnMinutes=Math.max(1,Number(state.warnMinutes)||15);state.alertMinutes=Math.max(state.warnMinutes+1,Number(state.alertMinutes)||20);state.updatedAt=Math.max(0,Number(state.updatedAt)||0);const rawAssistantOptions=(state.assistantOptions&&typeof state.assistantOptions==='object'&&!Array.isArray(state.assistantOptions))?state.assistantOptions:{};state.assistantOptions={enabled:true,stock:true,sales:true,finance:true,operations:true,limit:5,...rawAssistantOptions};state.assistantOptions.limit=[3,5,8].includes(Number(state.assistantOptions.limit))?Number(state.assistantOptions.limit):5;const visibleThemes=['yellow','cream','custom'];if(!visibleThemes.includes(state.theme))state.theme='yellow';removeDuplicateOrderImages(state);if(!state.theme)state.theme='yellow';state.version='3.0.56.0';let selected=null,receiptSize=80,receiptSnapshot=null,editingProductId=null,pendingProtectedScreen='cashScreen',pendingProtectedAction='screen',pendingProtectedPinType='cash',reportTab='current',quickCategory='Hızlı Satanlar',quickProductPage=0,pendingProductImage='',removeProductImageRequested=false,pendingRemoveItemId=null,pendingRemoveReason='Yanlış basıldı',splitSelection={},splitOpenRevision=0,pendingPaymentTotal=0,productBulkMode=false,productBulkSelection=new Set(),settingsActiveTab='general',settingsSecurityUnlocked=false,pendingCancelReason='Yanlış masa';const QUICK_PRODUCT_PAGE_SIZE=10;
++state.closedDays=state.closedDays.map(d=>({...d,sales:Array.isArray(d?.sales)?d.sales:[],expenses:Array.isArray(d?.expenses)?d.expenses:[]}));state.dayOpenedAt=Number(state.dayOpenedAt)||Date.now();state.warnMinutes=state.warnMinutes||15;state.alertMinutes=state.alertMinutes||20;const rawUiOptions=(state.uiOptions&&typeof state.uiOptions==='object'&&!Array.isArray(state.uiOptions))?state.uiOptions:{};state.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...rawUiOptions};const rawSoundOptions=(state.soundOptions&&typeof state.soundOptions==='object'&&!Array.isArray(state.soundOptions))?state.soundOptions:{};state.soundOptions={payment:true,table:true,warning:true,product:true,volume:80,paymentPreset:'success',tablePreset:'soft',warningPreset:'alert',productPreset:'click',...rawSoundOptions};state.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(state.soundOptions.volume))?Number(state.soundOptions.volume):80));state.warnMinutes=Math.max(1,Number(state.warnMinutes)||15);state.alertMinutes=Math.max(state.warnMinutes+1,Number(state.alertMinutes)||20);state.updatedAt=Math.max(0,Number(state.updatedAt)||0);const rawAssistantOptions=(state.assistantOptions&&typeof state.assistantOptions==='object'&&!Array.isArray(state.assistantOptions))?state.assistantOptions:{};state.assistantOptions={enabled:true,stock:true,sales:true,finance:true,operations:true,limit:5,...rawAssistantOptions};state.assistantOptions.limit=[3,5,8].includes(Number(state.assistantOptions.limit))?Number(state.assistantOptions.limit):5;const visibleThemes=['yellow','cream','custom'];if(!visibleThemes.includes(state.theme))state.theme='yellow';removeDuplicateOrderImages(state);if(!state.theme)state.theme='yellow';state.version='3.0.57.0';let selected=null,receiptSize=80,receiptSnapshot=null,editingProductId=null,pendingProtectedScreen='cashScreen',pendingProtectedAction='screen',pendingProtectedPinType='cash',reportTab='current',quickCategory='Hızlı Satanlar',quickProductPage=0,pendingProductImage='',removeProductImageRequested=false,pendingRemoveItemId=null,pendingRemoveReason='Yanlış basıldı',splitSelection={},splitOpenRevision=0,pendingPaymentTotal=0,productBulkMode=false,productBulkSelection=new Set(),settingsActiveTab='general',settingsSecurityUnlocked=false,pendingCancelReason='Yanlış masa';const QUICK_PRODUCT_PAGE_SIZE=10;
+ const BTDD_CUSTOMER_ACTIVE_KEY='btdd-customer-active-table';
+ let manageProductPage=0;const MANAGE_PRODUCT_PAGE_SIZE=60;
+ const nowForCalendar=new Date();
+@@ -2045,7 +2053,7 @@
+   saved.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(saved.soundOptions.volume))?Number(saved.soundOptions.volume):80));const savedUi=(saved.uiOptions&&typeof saved.uiOptions==='object'&&!Array.isArray(saved.uiOptions))?saved.uiOptions:{};saved.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...savedUi};saved.uiOptions.glassOpacity=Math.max(55,Math.min(92,Number(saved.uiOptions.glassOpacity)||78));
+   removeDuplicateOrderImages(saved);
+   BtddSafety.normalize(saved);
+-  saved.version='3.0.56.0';
++  saved.version='3.0.57.0';
+   return saved
+ }
+ function applySyncedState(saved,revision,quiet=true,epoch=null){
+@@ -3035,8 +3043,11 @@
+     localStorage.setItem('btdd-ui-session',JSON.stringify({screen:active?.id||'homeScreen',tableId:selected?.id||'',drawerOpen:!!$('#drawer')?.classList.contains('open')}))
+   }catch{}
+ }
++function dismissStartupSplash(){const el=$('#startupSplash');if(!el||el.dataset.dismissed)return;el.dataset.dismissed='1';el.classList.add('is-dismissed');setTimeout(()=>{el.hidden=true},360)}
++setTimeout(dismissStartupSplash,2400);
+ let uiSessionRestored=false;
+ function restoreUiSession(){
++  dismissStartupSplash();
+   if(uiSessionRestored)return;uiSessionRestored=true;
+   try{
+     const u=JSON.parse(localStorage.getItem('btdd-ui-session')||'null');
+@@ -3616,7 +3627,7 @@
+ };
+ function btddDateKey(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`}
+ function btddDownload(name,text,type){const blob=new Blob([text],{type:type||'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200)}
+-function downloadBackupFile(){const pack={app:'BTDD',version:'3.0.56.0',exportedAt:new Date().toISOString(),data:state};btddDownload('BTDD-Yedek-'+btddDateKey()+'.json',JSON.stringify(pack,null,2));toast('Yedek dosyası hazırlandı')}
++function downloadBackupFile(){const pack={app:'BTDD',version:'3.0.57.0',exportedAt:new Date().toISOString(),data:state};btddDownload('BTDD-Yedek-'+btddDateKey()+'.json',JSON.stringify(pack,null,2));toast('Yedek dosyası hazırlandı')}
+ function xesc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
+ function xcell(v,t='String'){return `<Cell><Data ss:Type="${t}">${xesc(v)}</Data></Cell>`}function xsheet(n,rows){return `<Worksheet ss:Name="${xesc(n)}"><Table>${rows.map(r=>'<Row>'+r.map(c=>xcell(c.v,c.t||'String')).join('')+'</Row>').join('')}</Table></Worksheet>`}
+ function exportExcelFile(){
+--- a/installer.iss
++++ b/installer.iss
+@@ -1,5 +1,5 @@
+ #define MyAppName "ASARKAYA"
+-#define MyAppVersion "3.0.56.0"
++#define MyAppVersion "3.0.57.0"
+ #define MyAppPublisher "ASARKAYA"
+ #define MyAppExeName "BTDD.exe"
+ 
+@@ -13,7 +13,7 @@
+ DisableProgramGroupPage=yes
+ OutputDir=release
+ OutputBaseFilename=ASARKAYA_Setup_{#MyAppVersion}
+-SetupIconFile=btdd.ico
++SetupIconFile=asarkaya.ico
+ UninstallDisplayIcon={app}\{#MyAppExeName}
+ Compression=lzma2/max
+ SolidCompression=yes
+@@ -30,7 +30,7 @@
+ Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
+ 
+ [Tasks]
+-Name: "desktopicon"; Description: "Masaüstüne ASARKAYA kısayolu oluştur"; GroupDescription: "Kısayollar:"; Flags: unchecked
++Name: "desktopicon"; Description: "Masaüstüne ASARKAYA kısayolu oluştur"; GroupDescription: "Kısayollar:"
+ 
+ [InstallDelete]
+ Type: files; Name: "{autodesktop}\BTDD.lnk"
+--- a/launcher.py
++++ b/launcher.py
+@@ -908,7 +908,7 @@
+ 
+         if path=="/":path="/index.html"
+         safe=path.lstrip("/")
+-        allowed={"btdd-safety.js","bttdd-resmi-logo.png","bttdd-resmi-logo-hq.png","bttdd-resmi-logo.svg","btdd_soma_logo.png","index.html","manifest.json","apple-touch-icon.png","icon-192.png","icon-512.png"}
++        allowed={"btdd-safety.js","bttdd-resmi-logo.png","bttdd-resmi-logo-hq.png","bttdd-resmi-logo.svg","btdd_soma_logo.png","index.html","manifest.json","apple-touch-icon.png","icon-192.png","icon-512.png","asarkaya-mark.svg"}
+         is_sound=safe.startswith("sounds/") and safe.count("/")==1 and safe.split("/")[-1] in {"success.wav","soft.wav","digital.wav","bell.wav","alert.wav","click.wav","cash.wav","glass.wav"}
+         if safe not in allowed and not is_sound:
+             self.send_error(404);return
+--- a/manifest.json
++++ b/manifest.json
+@@ -14,7 +14,8 @@
+     {
+       "src": "/icon-512.png",
+       "sizes": "512x512",
+-      "type": "image/png"
++      "type": "image/png",
++      "purpose": "any maskable"
+     }
+   ]
+-}
+\ No newline at end of file
++}
+--- a/tests/test_asarkaya_branding.cjs
++++ b/tests/test_asarkaya_branding.cjs
+@@ -24,6 +24,6 @@
+ const receipt=html.match(/function receiptBody\([\s\S]*?\n/)[0];
+ assert(receipt.includes('class="receipt-brand">BTDD</div>'));
+ assert(!receipt.includes('ASARKAYA'));
+-assert(html.includes("state.version='3.0.56.0'"));
+-assert(version.includes('filevers=(3, 0, 56, 0)'));
++assert(html.includes("state.version='3.0.57.0'"));
++assert(version.includes('filevers=(3, 0, 57, 0)'));
+ console.log('ASARKAYA branding, BTDD receipt, legacy paths, and release metadata checks passed');
+--- a/tests/test_asarkaya_startup.cjs
++++ b/tests/test_asarkaya_startup.cjs
+@@ -0,0 +1,26 @@
++const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
++const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8');
++const installer=fs.readFileSync(path.join(root,'installer.iss'),'utf8'),build=fs.readFileSync(path.join(root,'build_release.bat'),'utf8'),launcher=fs.readFileSync(path.join(root,'launcher.py'),'utf8');
++const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.json'),'utf8'));
++assert(html.includes('id="startupSplash" role="status" aria-live="polite"'));
++assert(html.includes('class="startup-splash is-dismissed"')===false);
++assert(html.includes('setTimeout(dismissStartupSplash,2400)'));
++assert(html.includes('dismissStartupSplash();\n  if(uiSessionRestored)return'));
++assert(html.includes('prefers-reduced-motion:reduce'));
++assert(installer.includes('SetupIconFile=asarkaya.ico'));
++assert(installer.includes('Name: "desktopicon"; Description: "Masaüstüne ASARKAYA kısayolu oluştur"; GroupDescription: "Kısayollar:"'));
++assert(!installer.includes('Flags: unchecked'));
++assert(installer.includes('{autodesktop}\\ASARKAYA'));
++assert(build.includes('--icon "asarkaya.ico"'));
++assert(build.includes('--add-data "asarkaya-mark.svg;."'));
++assert(launcher.includes('"icon-512.png","asarkaya-mark.svg"'));
++assert.equal(manifest.short_name,'ASARKAYA');
++assert(manifest.icons.every(x=>x.src.includes('icon-')));
++for(const [file,w,h] of [['icon-192.png',192,192],['icon-512.png',512,512],['apple-touch-icon.png',180,180]]){
++ const b=fs.readFileSync(path.join(root,file));assert.equal(b.toString('hex',0,8),'89504e470d0a1a0a');assert.equal(b.readUInt32BE(16),w);assert.equal(b.readUInt32BE(20),h)
++}
++const ico=fs.readFileSync(path.join(root,'asarkaya.ico'));assert.equal(ico.readUInt16LE(0),0);assert.equal(ico.readUInt16LE(2),1);
++let hidden=false,dismissed=false;const el={dataset:{},classList:{add:x=>{dismissed=x==='is-dismissed'}},set hidden(x){hidden=x}};
++const c={$:id=>id==='#startupSplash'?el:null,setTimeout:(fn)=>{c.timer=fn}};vm.createContext(c);vm.runInContext(html.match(/function dismissStartupSplash\(\)\{[\s\S]*?\n/)[0],c);c.dismissStartupSplash();assert.equal(dismissed,true);assert.equal(el.dataset.dismissed,'1');c.timer();assert.equal(hidden,true);
++const receipt=html.match(/function receiptBody\([\s\S]*?\n/)[0];assert(receipt.includes('class="receipt-brand">BTDD</div>'));
++console.log('ASARKAYA icon/PWA/installer/startup fallback and BTDD receipt checks passed');
+--- a/tests/test_frontend.cjs
++++ b/tests/test_frontend.cjs
+@@ -68,7 +68,7 @@
+ test('Physical product gesture has ghost-click suppression',()=>{assert(htmlAll.includes('suppressSyntheticClickUntil'));assert(htmlAll.includes('gestureConsumed=true'));assert(htmlAll.includes('BTDD_DUPLICATE_TAP_MS=140'))});
+ test('Day close uses deterministic business-session id',()=>{assert(htmlAll.includes("id:'dayclose-'"));assert(htmlAll.includes('dayCloseInFlight'))});
+ 
+-test('V30.38 keeps simple themes and migrates removed themes safely',()=>{assert(html.includes("const visibleThemes=['yellow','cream','custom']"));assert(html.includes("if(!visibleThemes.includes(state.theme))state.theme='yellow'"));assert(!html.includes("if(!state.theme||state.theme==='yellow')state.theme='green'"));assert(html.includes("saved.version='3.0.56.0'"));assert(html.includes("version:'3.0.56.0',exportedAt"))});
++test('V30.38 keeps simple themes and migrates removed themes safely',()=>{assert(html.includes("const visibleThemes=['yellow','cream','custom']"));assert(html.includes("if(!visibleThemes.includes(state.theme))state.theme='yellow'"));assert(!html.includes("if(!state.theme||state.theme==='yellow')state.theme='green'"));assert(html.includes("saved.version='3.0.57.0'"));assert(html.includes("version:'3.0.57.0',exportedAt"))});
+ 
+ test('Unified header, custom palette, and assistant settings are present',()=>{assert(html.includes('body .screen .hero{background:transparent!important'));for(const id of ['colorPaper','colorSurface','colorAccent','saveCustomColors','assistantEnabled','assistantStock','assistantSales','assistantFinance','assistantLimit','saveAssistantSettings'])assert(html.includes('id="'+id+'"'));assert(html.includes('function customTheme()'));assert(html.includes('function renderAssistantSettings()'))});
+ 
+@@ -76,7 +76,7 @@
+ test('V30.38 assistant has separate operations control',()=>{assert(html.includes('id="assistantOperations"'));assert(html.includes('operations:true'));assert(html.includes('operationTitles'));assert(html.includes("['assistantOperations','operations']"))});
+ 
+ test('V30.39 custom palette shows live contrast safety status',()=>{assert(html.includes('id="colorContrastStatus"'));assert(html.includes('function renderColorContrastStatus()'));assert(html.includes('surfaceRatio>=4.5&&accentRatio>=4.5'));assert(html.includes('renderColorContrastStatus()'))});
+-test('V30.39 release pipeline version labels are aligned',()=>{const installer=fs.readFileSync(path.join(__dirname,'../installer.iss'),'utf8'),build=fs.readFileSync(path.join(__dirname,'../build_release.bat'),'utf8'),vi=fs.readFileSync(path.join(__dirname,'../version_info.txt'),'utf8');assert(installer.includes('#define MyAppVersion "3.0.56.0"'));assert(build.includes('ASARKAYA_Setup_3.0.56.0.exe'));assert(vi.includes('filevers=(3, 0, 56, 0)'));assert(vi.includes('prodvers=(3, 0, 56, 0)'))});
++test('V30.39 release pipeline version labels are aligned',()=>{const installer=fs.readFileSync(path.join(__dirname,'../installer.iss'),'utf8'),build=fs.readFileSync(path.join(__dirname,'../build_release.bat'),'utf8'),vi=fs.readFileSync(path.join(__dirname,'../version_info.txt'),'utf8');assert(installer.includes('#define MyAppVersion "3.0.57.0"'));assert(build.includes('ASARKAYA_Setup_3.0.57.0.exe'));assert(vi.includes('filevers=(3, 0, 57, 0)'));assert(vi.includes('prodvers=(3, 0, 57, 0)'))});
+ 
+ test('V30.40 assistant shows a compact daily priority summary without mutating data',()=>{assert(html.includes('class=\"today-focus\"'));assert(html.includes('Bugün dikkat et'));assert(html.includes("sorted.slice(0,3).map(x=>esc(x.title)).join(' · ')"));assert(html.includes('Asistan kayıtları değiştirmez'))});
+ 
+--- a/version_info.txt
++++ b/version_info.txt
+@@ -1,7 +1,7 @@
+ VSVersionInfo(
+   ffi=FixedFileInfo(
+-    filevers=(3, 0, 56, 0),
+-    prodvers=(3, 0, 56, 0),
++    filevers=(3, 0, 57, 0),
++    prodvers=(3, 0, 57, 0),
+     mask=0x3f,
+     flags=0x0,
+     OS=0x40004,
+@@ -16,12 +16,12 @@
+         [
+           StringStruct('CompanyName', 'ASARKAYA'),
+           StringStruct('FileDescription', 'ASARKAYA Adisyon ve Masa Yönetimi'),
+-          StringStruct('FileVersion', '3.0.56.0'),
++          StringStruct('FileVersion', '3.0.57.0'),
+           StringStruct('InternalName', 'BTDD'),
+           StringStruct('LegalCopyright', 'BTDD'),
+           StringStruct('OriginalFilename', 'BTDD.exe'),
+           StringStruct('ProductName', 'ASARKAYA'),
+-          StringStruct('ProductVersion', '3.0.56.0')
++          StringStruct('ProductVersion', '3.0.57.0')
+         ]
+       )
+     ]),

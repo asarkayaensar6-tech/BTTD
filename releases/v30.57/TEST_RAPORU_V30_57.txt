@@ -1,0 +1,8 @@
+V30.57 doğrulama raporu — 28.09.2026
+
+- ASARKAYA Windows/PWA/iPhone ikon seti PNG/ICO başlık ve ölçü kontrollerinden geçti; ikon görünümü ayrıca görsel olarak incelendi.
+- Açılış ekranı erken veri yüklemesi tamamlandığında kapanma ve 2,4 saniyelik güvenli zaman aşımı testlerinden geçti.
+- Kurulum kısayolunun varsayılan seçili olması ve ASARKAYA ikonu doğrulandı; BTDD bilgi fişi adı korundu.
+- Frontend: 53 test; ürün analizi: 10 birim + renderer; satış analizi: 15; akıllı asistan: 8; senkron/kısayol: 7; gün sonu/veri güvenliği: 18; masa uyarısı: 7; grafik: 108 geometri + 4 uyumluluk/kontrast testi. Tamamı geçti.
+- Statik kontrol, V30.56 tabanına yama uygulama ve ZIP bütünlüğü geçti.
+- Gerçek Windows EXE/kurulum derlemesi, iPhone Safari ve fiziksel kasa/yazıcı testi bu ortamda yapılmadı.
