@@ -1,0 +1,15 @@
+--- a/index.html
++++ b/index.html
+@@ -1949,8 +1949,10 @@
+   const chip=$('#syncChip');
+   if(chip){
+     chip.classList.toggle('online',syncOnline);chip.classList.toggle('offline',!syncOnline);
+-    const label=chip.querySelector('span');if(label)label.textContent=text||(syncOnline?'Bağlı':'Bağlantı Yok');
+-    chip.title=syncOnline?'Senkron bağlı · '+new Date(lastSyncOkAt).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):(text||'Bağlantı yok · kayıtlar cihazda korunuyor');
++    const waiting=stateDirty||pendingSyncRequest;
++    const status=text||(syncConflict?'Çakışma var':waiting?(syncOnline?'Kaydediliyor…':'Cihazda bekliyor'):(syncOnline?'Bağlı':'Bağlantı Yok'));
++    const label=chip.querySelector('span');if(label)label.textContent=status;
++    chip.title=status+(syncConflict?' · Kayıtları kontrol et':waiting?' · Sunucu onayı beklenen işlem var':syncOnline?' · Son bağlantı '+new Date(lastSyncOkAt).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):' · Kayıtlar cihazda korunuyor');
+   }
+ }
+ function showMobilePin(){
