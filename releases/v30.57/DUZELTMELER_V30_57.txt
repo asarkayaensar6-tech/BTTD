@@ -1,0 +1,6 @@
+V30.57 — ASARKAYA uygulama simgesi ve açılış
+
+- ASARKAYA monogramı içeren koyu-altın premium uygulama simgesi Windows EXE/kurulumuna, PWA ikonlarına ve iPhone ana ekran ikonuna eklendi.
+- Açılışta erişilebilir ASARKAYA karşılama perdesi gösterilir; güvenli durum yüklenince kapanır ve her koşulda 2,4 saniyede kendiliğinden kaybolur.
+- Kurulumda masaüstü kısayolu varsayılan olarak seçili hale getirildi. Eski BTDD kısayolu yükseltme sırasında temizlenir.
+- Bilgi fişi BTDD markasını korur; kayıt/senkron akışı değiştirilmedi.
