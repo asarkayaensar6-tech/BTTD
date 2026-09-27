@@ -1,0 +1,8 @@
+BTDD V30.52 — Bağlı durumu ve satış dönemi kıyaslaması
+
+- Çevrimiçi bağlantı göstergesi her durumda yalnızca “Bağlı” yazar; çevrimdışıyken bağlantı uyarısı korunur.
+- Satış Analizi özeti, seçili grafik aralığının cirosunu önceki eşit uzunluktaki dönemle karşılaştırır.
+- Günlük görünüm son 14 günü önceki 14 günle; haftalık görünüm son 8 takvim haftasını önceki 8 haftayla; aylık görünüm son 12 ayı önceki 12 ayla kıyaslar.
+- Önceki dönemde satış yoksa yanıltıcı yüzde üretmek yerine “Önceki dönemde satış yok” gösterilir.
+
+Doğrulama: 8 bağlantı durumu geçişi, 15 satış analizi hesabı, 53 ön yüz kontrolü, 7 senkron/navigasyon, 8 asistan hesabı, 112 grafik geometri/uyumluluk kontrolü ve 18 gün sonu güvenlik testi geçti. BTDD_KONTROL.py statik denetimi geçti. Statik denetim ve geometri senaryoları gerçek cihaz veya tarayıcı görsel testi değildir.
