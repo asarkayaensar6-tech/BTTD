@@ -1,0 +1,11 @@
+ASARKAYA V30.58 test raporu
+
+Durum: Yerel regresyon ve statik kontroller başarılı.
+
+- Ön bellek tekrarı: aynı girdide analiz fonksiyonu ve tüm satış kayıtlarını alma işlemi tekrar çalışmıyor.
+- Geçersiz kılma: dönem, özel tarih aralığı, kaydedilmiş state, yerel mutation, sunucu revizyonu ve kayıt sayısı değişince analiz yeniden hesaplanıyor.
+- Senkron: görünür sekmede 900 ms aralık korunuyor; görünürlük geri geldiğinde eşitleme tetikleniyor.
+- Satış analizi render testi: kayıtlı fiyat, tarih, ödeme türü, miktar ve geçersiz özel aralık kontrol edildi.
+- Uygulama paketinin mevcut testleri: ürün analizi, satış analizi, asistan, grafik matematiği, eşzamanlama, gün sonu, kasa güvenliği, tema ve statik paket kontrolleri başarılı.
+
+Kapsam notu: testler Node.js/Python test koşucularında çalıştı. Gerçek Windows kurulum, iPhone/Safari, farklı ağ kalitesi ve cihazlar arası canlı yük testi yapılmadı. Bu rapor cihaz performansı ölçümü iddiası taşımaz.
