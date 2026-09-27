@@ -1,0 +1,9 @@
+V30.56 doğrulama raporu — 27.09.2026
+
+- ASARKAYA masaüstü/başlat menüsü, uygulama penceresi, PWA ana ekranı ve görünür marka kontrolleri geçti.
+- Bilgi fişi marka regresyonu: BTDD olarak korundu.
+- Mevcut BTDD.exe adı, kurulum/veri klasörü ve API/senkron teknik anahtarlarının korunduğu doğrulandı.
+- Marka ve sürüm metaveri testleri geçti.
+- Frontend: 53 test; ürün analizi: 10 birim ve renderer; satış analizi: 15; akıllı asistan: 8; senkron/kısayol: 7; gün sonu/veri güvenliği: 18; tablo süre vurgusu: 7; grafik geometrisi: 108 senaryo + 4 uyumluluk/kontrast testi. Tamamı geçti.
+- Statik kontrol ve ZIP bütünlük kontrolü geçti.
+- Gerçek Windows kurulum derlemesi, gerçek tarayıcı görüntü testi ve fiziksel yazıcı/kasa donanımı bu ortamda çalıştırılmadı.

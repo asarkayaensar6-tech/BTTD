@@ -1,0 +1,6 @@
+V30.56 — ASARKAYA uygulama adı
+
+- Windows masaüstü ve Başlat menüsü kısayolları ASARKAYA olarak adlandırıldı.
+- Uygulama penceresi, iPhone ana ekranı, kurulum başlığı ve görünür arayüz ASARKAYA adını kullanıyor.
+- Bilgi fişindeki marka BTDD olarak bırakıldı.
+- BTDD veri klasörü, çalıştırılabilir dosya adı, API/senkron tanımlayıcıları ve bağlantı yardımcı dosyaları geriye dönük uyumluluk için korundu.
