@@ -1,0 +1,227 @@
+--- a/BTDD_KULLANIMA_HAZIR/index.html
++++ b/BTDD_KULLANIMA_HAZIR/index.html
+@@ -1576,6 +1576,7 @@
+ <style id="btdd-v3048-assistant-sync">
+ .last-server-ack{font-size:12px;line-height:1.4;color:var(--muted);margin:0 0 12px;overflow-wrap:anywhere}
+ .assistant-link{min-height:44px;max-width:100%;white-space:normal;margin-top:10px;text-align:left}
++.chart-summary .chart-period-trend{font-weight:800}.chart-summary .chart-period-trend.up{color:#16834a}.chart-summary .chart-period-trend.down{color:#bd4a42}.chart-summary .chart-period-trend.flat{color:var(--muted)}.chart-summary .chart-period-trend.unavailable{color:var(--muted);font-weight:600}
+ </style>
+ </head>
+ <body>
+@@ -1868,7 +1869,7 @@
+ emoji:typeof p.emoji==='string'?p.emoji.slice(0,16):''
+ }));state.background=typeof state.background==='string'?state.background:'';state.theme=typeof state.theme==='string'?state.theme:'cream';const legacyCashPin=/^\d{4}$/.test(String(state.cashPin||''))?String(state.cashPin):'1234';const rawSectionPins=(state.sectionPins&&typeof state.sectionPins==='object'&&!Array.isArray(state.sectionPins))?state.sectionPins:{};const cleanSectionPin=v=>/^\d{4}$/.test(String(v||''))?String(v):legacyCashPin;state.sectionPins={cash:cleanSectionPin(rawSectionPins.cash),reports:cleanSectionPin(rawSectionPins.reports),products:cleanSectionPin(rawSectionPins.products)};state.cashPin=state.sectionPins.cash;if(!Array.isArray(state.closedDays))state.closedDays=[];if(!Array.isArray(state.expenses))state.expenses=[];state.auditLog=Array.isArray(state.auditLog)?state.auditLog:[];const rawCashSession=(state.cashSession&&typeof state.cashSession==='object'&&!Array.isArray(state.cashSession))?state.cashSession:{};state.cashSession={openingFloat:0,setAt:Date.now(),...rawCashSession};
+ state.sales=state.sales.map(s=>({...s,items:Array.isArray(s.items)?s.items:[],total:Number(s.total)||0}));
+-state.closedDays=state.closedDays.map(d=>({...d,sales:Array.isArray(d?.sales)?d.sales:[],expenses:Array.isArray(d?.expenses)?d.expenses:[]}));state.dayOpenedAt=Number(state.dayOpenedAt)||Date.now();state.warnMinutes=state.warnMinutes||15;state.alertMinutes=state.alertMinutes||20;const rawUiOptions=(state.uiOptions&&typeof state.uiOptions==='object'&&!Array.isArray(state.uiOptions))?state.uiOptions:{};state.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...rawUiOptions};const rawSoundOptions=(state.soundOptions&&typeof state.soundOptions==='object'&&!Array.isArray(state.soundOptions))?state.soundOptions:{};state.soundOptions={payment:true,table:true,warning:true,product:true,volume:80,paymentPreset:'success',tablePreset:'soft',warningPreset:'alert',productPreset:'click',...rawSoundOptions};state.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(state.soundOptions.volume))?Number(state.soundOptions.volume):80));state.warnMinutes=Math.max(1,Number(state.warnMinutes)||15);state.alertMinutes=Math.max(state.warnMinutes+1,Number(state.alertMinutes)||20);state.updatedAt=Math.max(0,Number(state.updatedAt)||0);const rawAssistantOptions=(state.assistantOptions&&typeof state.assistantOptions==='object'&&!Array.isArray(state.assistantOptions))?state.assistantOptions:{};state.assistantOptions={enabled:true,stock:true,sales:true,finance:true,operations:true,limit:5,...rawAssistantOptions};state.assistantOptions.limit=[3,5,8].includes(Number(state.assistantOptions.limit))?Number(state.assistantOptions.limit):5;const visibleThemes=['yellow','cream','custom'];if(!visibleThemes.includes(state.theme))state.theme='yellow';removeDuplicateOrderImages(state);if(!state.theme)state.theme='yellow';state.version='3.0.51.0';let selected=null,receiptSize=80,receiptSnapshot=null,editingProductId=null,pendingProtectedScreen='cashScreen',pendingProtectedAction='screen',pendingProtectedPinType='cash',reportTab='current',quickCategory='Hızlı Satanlar',quickProductPage=0,pendingProductImage='',removeProductImageRequested=false,pendingRemoveItemId=null,pendingRemoveReason='Yanlış basıldı',splitSelection={},splitOpenRevision=0,pendingPaymentTotal=0,productBulkMode=false,productBulkSelection=new Set(),settingsActiveTab='general',settingsSecurityUnlocked=false,pendingCancelReason='Yanlış masa';const QUICK_PRODUCT_PAGE_SIZE=10;
++state.closedDays=state.closedDays.map(d=>({...d,sales:Array.isArray(d?.sales)?d.sales:[],expenses:Array.isArray(d?.expenses)?d.expenses:[]}));state.dayOpenedAt=Number(state.dayOpenedAt)||Date.now();state.warnMinutes=state.warnMinutes||15;state.alertMinutes=state.alertMinutes||20;const rawUiOptions=(state.uiOptions&&typeof state.uiOptions==='object'&&!Array.isArray(state.uiOptions))?state.uiOptions:{};state.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...rawUiOptions};const rawSoundOptions=(state.soundOptions&&typeof state.soundOptions==='object'&&!Array.isArray(state.soundOptions))?state.soundOptions:{};state.soundOptions={payment:true,table:true,warning:true,product:true,volume:80,paymentPreset:'success',tablePreset:'soft',warningPreset:'alert',productPreset:'click',...rawSoundOptions};state.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(state.soundOptions.volume))?Number(state.soundOptions.volume):80));state.warnMinutes=Math.max(1,Number(state.warnMinutes)||15);state.alertMinutes=Math.max(state.warnMinutes+1,Number(state.alertMinutes)||20);state.updatedAt=Math.max(0,Number(state.updatedAt)||0);const rawAssistantOptions=(state.assistantOptions&&typeof state.assistantOptions==='object'&&!Array.isArray(state.assistantOptions))?state.assistantOptions:{};state.assistantOptions={enabled:true,stock:true,sales:true,finance:true,operations:true,limit:5,...rawAssistantOptions};state.assistantOptions.limit=[3,5,8].includes(Number(state.assistantOptions.limit))?Number(state.assistantOptions.limit):5;const visibleThemes=['yellow','cream','custom'];if(!visibleThemes.includes(state.theme))state.theme='yellow';removeDuplicateOrderImages(state);if(!state.theme)state.theme='yellow';state.version='3.0.52.0';let selected=null,receiptSize=80,receiptSnapshot=null,editingProductId=null,pendingProtectedScreen='cashScreen',pendingProtectedAction='screen',pendingProtectedPinType='cash',reportTab='current',quickCategory='Hızlı Satanlar',quickProductPage=0,pendingProductImage='',removeProductImageRequested=false,pendingRemoveItemId=null,pendingRemoveReason='Yanlış basıldı',splitSelection={},splitOpenRevision=0,pendingPaymentTotal=0,productBulkMode=false,productBulkSelection=new Set(),settingsActiveTab='general',settingsSecurityUnlocked=false,pendingCancelReason='Yanlış masa';const QUICK_PRODUCT_PAGE_SIZE=10;
+ const BTDD_CUSTOMER_ACTIVE_KEY='btdd-customer-active-table';
+ let manageProductPage=0;const MANAGE_PRODUCT_PAGE_SIZE=60;
+ const nowForCalendar=new Date();
+@@ -1949,10 +1950,9 @@
+   const chip=$('#syncChip');
+   if(chip){
+     chip.classList.toggle('online',syncOnline);chip.classList.toggle('offline',!syncOnline);
+-    const waiting=stateDirty||pendingSyncRequest;
+-    const status=text||(syncConflict?'Çakışma var':waiting?(syncOnline?'Kaydediliyor…':'Cihazda bekliyor'):(syncOnline?'Bağlı':'Bağlantı Yok'));
++    const status=syncOnline?'Bağlı':(text||'Bağlantı Yok');
+     const label=chip.querySelector('span');if(label)label.textContent=status;
+-    chip.title=status+(syncConflict?' · Kayıtları kontrol et':waiting?' · Sunucu onayı beklenen işlem var':syncOnline?' · Son bağlantı '+new Date(lastSyncOkAt).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):' · Kayıtlar cihazda korunuyor');
++    chip.title=status+(syncOnline?' · Son bağlantı '+new Date(lastSyncOkAt).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):' · Kayıtlar cihazda korunuyor');
+   }
+ }
+ function showMobilePin(){
+@@ -2009,7 +2009,7 @@
+   saved.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(saved.soundOptions.volume))?Number(saved.soundOptions.volume):80));const savedUi=(saved.uiOptions&&typeof saved.uiOptions==='object'&&!Array.isArray(saved.uiOptions))?saved.uiOptions:{};saved.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...savedUi};saved.uiOptions.glassOpacity=Math.max(55,Math.min(92,Number(saved.uiOptions.glassOpacity)||78));
+   removeDuplicateOrderImages(saved);
+   BtddSafety.normalize(saved);
+-  saved.version='3.0.51.0';
++  saved.version='3.0.52.0';
+   return saved
+ }
+ function applySyncedState(saved,revision,quiet=true,epoch=null){
+@@ -2780,6 +2780,31 @@
+  if(mode==='daily'){for(let i=13;i>=0;i--){const d=new Date(today);d.setHours(12,0,0,0);d.setDate(d.getDate()-i);const k=saleDateKey(d);out.push({label:d.toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit'}),value:m.get(k)||0})}}
+  else if(mode==='weekly'){const monday=new Date(today);monday.setHours(12,0,0,0);monday.setDate(monday.getDate()-(monday.getDay()+6)%7);for(let w=7;w>=0;w--){let total=0;const start=new Date(monday);start.setDate(start.getDate()-w*7);for(let i=0;i<7;i++){const d=new Date(start);d.setDate(d.getDate()+i);if(saleDateKey(d)>saleDateKey(today))break;total+=m.get(saleDateKey(d))||0}out.push({label:(w===0?'Bu hafta':w+' hf önce'),value:total})}}
+  else{for(let i=11;i>=0;i--){const d=new Date(today.getFullYear(),today.getMonth()-i,1);let total=0;for(const [k,v] of m){const x=new Date(k+'T12:00:00');if(x.getFullYear()===d.getFullYear()&&x.getMonth()===d.getMonth())total+=v}out.push({label:d.toLocaleDateString('tr-TR',{month:'short'}),value:total})}}return out}
++function chartPeriodComparison(mode,now=new Date()){
++ const m=revenueByDay(),anchor=new Date(now);anchor.setHours(12,0,0,0);
++ const dateSum=d=>m.get(saleDateKey(d))||0;
++ const sumDays=(start,count,includeThrough=Infinity)=>{let total=0;for(let i=0;i<count;i++){const d=new Date(start);d.setDate(d.getDate()+i);if(i<=includeThrough)total+=dateSum(d)}return total};
++ let current=0,previous=0,label='',previousLabel='';
++ if(mode==='daily'){
++  const start=new Date(anchor);start.setDate(start.getDate()-13);current=sumDays(start,14);
++  const prevStart=new Date(anchor);prevStart.setDate(prevStart.getDate()-27);previous=sumDays(prevStart,14);
++  label='14 gün';previousLabel='önceki 14 gün';
++ }else if(mode==='weekly'){
++  const monday=new Date(anchor);monday.setDate(monday.getDate()-(monday.getDay()+6)%7);
++  for(let w=0;w<8;w++){const start=new Date(monday);start.setDate(start.getDate()-w*7);const total=sumDays(start,7,w===0?(anchor-start)/86400000:6);if(w<8)current+=total}
++  for(let w=8;w<16;w++){const start=new Date(monday);start.setDate(start.getDate()-w*7);previous+=sumDays(start,7)}
++  label='8 hafta';previousLabel='önceki 8 hafta';
++ }else{
++  for(let i=0;i<12;i++){
++   const cur=new Date(anchor.getFullYear(),anchor.getMonth()-i,1,12),prev=new Date(anchor.getFullYear(),anchor.getMonth()-12-i,1,12);
++   current+=sumDays(cur,new Date(cur.getFullYear(),cur.getMonth()+1,0).getDate());
++   previous+=sumDays(prev,new Date(prev.getFullYear(),prev.getMonth()+1,0).getDate());
++  }
++  label='12 ay';previousLabel='önceki 12 ay';
++ }
++ const changePercent=previous>0?(current-previous)/previous*100:null;
++ return {current,previous,changePercent,label,previousLabel};
++}
+ function drawRevenueChart(){
+  const c=$('#revenueChart');if(!c)return;
+  const wrap=c.parentElement,w=wrap.clientWidth,h=Math.max(220,wrap.clientHeight);
+@@ -2856,8 +2881,8 @@
+   if(!smart.length)smart.push({t:'Analiz hazır',x:'Satış oldukça kârlılık, yoğun saat, ürün ve dönem karşılaştırmaları burada oluşacak.'});
+   if($('#dashSmartSales'))$('#dashSmartSales').innerHTML=smart.slice(0,5).map(x=>`<div class="smart-sales-item"><b>${esc(x.t)}</b><span>${esc(x.x)}</span></div>`).join('');
+   document.querySelectorAll('[data-chart-mode]').forEach(b=>b.classList.toggle('active',b.dataset.chartMode===chartMode));
+-  const series=chartSeries(chartMode),sum=series.reduce((n,x)=>n+Number(x.value||0),0),label={daily:'Son 14 gün',weekly:'Takvim haftaları (Pzt–Paz)',monthly:'Son 12 ay'}[chartMode];
+-  if($('#chartSummary'))$('#chartSummary').innerHTML=`<span>${label} · İş günü kayıtları</span><strong>Toplam ${money(sum)}</strong>`;
++  const series=chartSeries(chartMode),sum=series.reduce((n,x)=>n+Number(x.value||0),0),label={daily:'Son 14 gün',weekly:'Takvim haftaları (Pzt–Paz)',monthly:'Son 12 ay'}[chartMode],comparison=chartPeriodComparison(chartMode),change=comparison.changePercent,trend=change===null?'Önceki dönemde satış yok':(change>0?'▲ ':change<0?'▼ ':'→ ')+Math.abs(change).toLocaleString('tr-TR',{maximumFractionDigits:1})+'%';
++  if($('#chartSummary'))$('#chartSummary').innerHTML=`<span>${label} · İş günü kayıtları</span><strong>Toplam ${money(sum)}</strong><span>${comparison.previousLabel} · ${money(comparison.previous)}</span><strong class="chart-period-trend ${change===null?'unavailable':change>0?'up':change<0?'down':'flat'}">${trend}</strong>`;
+   requestAnimationFrame(drawRevenueChart)
+ }
+ function getAudioCtx(){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;if(!audioCtx)audioCtx=new C();return audioCtx}
+@@ -3488,7 +3513,7 @@
+ };
+ function btddDateKey(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`}
+ function btddDownload(name,text,type){const blob=new Blob([text],{type:type||'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200)}
+-function downloadBackupFile(){const pack={app:'BTDD',version:'3.0.51.0',exportedAt:new Date().toISOString(),data:state};btddDownload('BTDD-Yedek-'+btddDateKey()+'.json',JSON.stringify(pack,null,2));toast('Yedek dosyası hazırlandı')}
++function downloadBackupFile(){const pack={app:'BTDD',version:'3.0.52.0',exportedAt:new Date().toISOString(),data:state};btddDownload('BTDD-Yedek-'+btddDateKey()+'.json',JSON.stringify(pack,null,2));toast('Yedek dosyası hazırlandı')}
+ function xesc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
+ function xcell(v,t='String'){return `<Cell><Data ss:Type="${t}">${xesc(v)}</Data></Cell>`}function xsheet(n,rows){return `<Worksheet ss:Name="${xesc(n)}"><Table>${rows.map(r=>'<Row>'+r.map(c=>xcell(c.v,c.t||'String')).join('')+'</Row>').join('')}</Table></Worksheet>`}
+ function exportExcelFile(){
+--- a/BTDD_KULLANIMA_HAZIR/build_release.bat
++++ b/BTDD_KULLANIMA_HAZIR/build_release.bat
+@@ -73,7 +73,7 @@
+     echo ==========================================
+     echo   KURULUM DOSYASI HAZIR
+     echo ==========================================
+-    echo %CD%\release\BTDD_Setup_3.0.51.0.exe
++    echo %CD%\release\BTDD_Setup_3.0.52.0.exe
+     echo.
+     start "" "%CD%\release"
+ ) else (
+--- a/BTDD_KULLANIMA_HAZIR/BTDD_KONTROL.py
++++ b/BTDD_KULLANIMA_HAZIR/BTDD_KONTROL.py
+@@ -10,7 +10,7 @@
+ for required in ['/api/state','/api/archive-day','/api/shutdown','/sounds/success.wav']:
+     if required not in html and required.startswith('/sounds/'): errors.append('Eksik ses dosyasi kullanimi: '+required)
+     elif required not in html and not required.startswith('/sounds/'): errors.append('Eksik API kullanimi: '+required)
+-if "state.version='3.0.51.0'" not in html: errors.append('Surum etiketi 3.0.51.0 degil')
++if "state.version='3.0.52.0'" not in html: errors.append('Surum etiketi 3.0.52.0 degil')
+ ids=re.findall(r'\bid="([^"]+)"',html)
+ dups=[k for k,v in collections.Counter(ids).items() if v>1]
+ if dups: errors.append('Tekrarlanan HTML ID: '+', '.join(dups))
+@@ -66,7 +66,7 @@
+ if '<=55)state.soundOptions.volume=80' in html: errors.append('Dusuk ses seviyesini zorla 80 yapan eski hata geri gelmis')
+ if '_quarantine_corrupt_db' not in launcher or 'CorruptBackups' not in launcher: errors.append('Bozuk SQLite otomatik kurtarma eksik')
+ version_info=(base/'version_info.txt').read_text(encoding='utf-8')
+-if 'filevers=(3, 0, 51, 0)' not in version_info or 'prodvers=(3, 0, 51, 0)' not in version_info: errors.append('Windows sayisal surum bilgisi 3.0.51.0 degil')
++if 'filevers=(3, 0, 52, 0)' not in version_info or 'prodvers=(3, 0, 52, 0)' not in version_info: errors.append('Windows sayisal surum bilgisi 3.0.52.0 degil')
+ 
+ 
+ # V30.49 satış analizi DOM yerleşim regresyonu
+@@ -164,5 +164,5 @@
+ print('- Toplu urun silme + hesap iptal PIN guvenligi: OK')
+ print('- Saydam/cam arayuz + kilitli ayarlar: OK')
+ print('- BTDD Sound 2.0 (8 ses): OK')
+-print('- Windows sayisal surum bilgisi: 3.0.51.0')
+-print('- Surum: 3.0.51.0')
++print('- Windows sayisal surum bilgisi: 3.0.52.0')
++print('- Surum: 3.0.52.0')
+--- a/BTDD_KULLANIMA_HAZIR/version_info.txt
++++ b/BTDD_KULLANIMA_HAZIR/version_info.txt
+@@ -1,7 +1,7 @@
+ VSVersionInfo(
+   ffi=FixedFileInfo(
+-    filevers=(3, 0, 51, 0),
+-    prodvers=(3, 0, 51, 0),
++    filevers=(3, 0, 52, 0),
++    prodvers=(3, 0, 52, 0),
+     mask=0x3f,
+     flags=0x0,
+     OS=0x40004,
+@@ -16,12 +16,12 @@
+         [
+           StringStruct('CompanyName', 'BTDD'),
+           StringStruct('FileDescription', 'BTDD Adisyon ve Masa Yönetimi'),
+-          StringStruct('FileVersion', '3.0.51.0'),
++          StringStruct('FileVersion', '3.0.52.0'),
+           StringStruct('InternalName', 'BTDD'),
+           StringStruct('LegalCopyright', 'BTDD'),
+           StringStruct('OriginalFilename', 'BTDD.exe'),
+           StringStruct('ProductName', 'BTDD'),
+-          StringStruct('ProductVersion', '3.0.51.0')
++          StringStruct('ProductVersion', '3.0.52.0')
+         ]
+       )
+     ]),
+--- a/BTDD_KULLANIMA_HAZIR/installer.iss
++++ b/BTDD_KULLANIMA_HAZIR/installer.iss
+@@ -1,5 +1,5 @@
+ #define MyAppName "BTDD"
+-#define MyAppVersion "3.0.51.0"
++#define MyAppVersion "3.0.52.0"
+ #define MyAppPublisher "BTDD"
+ #define MyAppExeName "BTDD.exe"
+ 
+--- a/BTDD_KULLANIMA_HAZIR/tests/test_frontend.cjs
++++ b/BTDD_KULLANIMA_HAZIR/tests/test_frontend.cjs
+@@ -68,7 +68,7 @@
+ test('Physical product gesture has ghost-click suppression',()=>{assert(htmlAll.includes('suppressSyntheticClickUntil'));assert(htmlAll.includes('gestureConsumed=true'));assert(htmlAll.includes('BTDD_DUPLICATE_TAP_MS=140'))});
+ test('Day close uses deterministic business-session id',()=>{assert(htmlAll.includes("id:'dayclose-'"));assert(htmlAll.includes('dayCloseInFlight'))});
+ 
+-test('V30.38 keeps simple themes and migrates removed themes safely',()=>{assert(html.includes("const visibleThemes=['yellow','cream','custom']"));assert(html.includes("if(!visibleThemes.includes(state.theme))state.theme='yellow'"));assert(!html.includes("if(!state.theme||state.theme==='yellow')state.theme='green'"));assert(html.includes("saved.version='3.0.51.0'"));assert(html.includes("version:'3.0.51.0',exportedAt"))});
++test('V30.38 keeps simple themes and migrates removed themes safely',()=>{assert(html.includes("const visibleThemes=['yellow','cream','custom']"));assert(html.includes("if(!visibleThemes.includes(state.theme))state.theme='yellow'"));assert(!html.includes("if(!state.theme||state.theme==='yellow')state.theme='green'"));assert(html.includes("saved.version='3.0.52.0'"));assert(html.includes("version:'3.0.52.0',exportedAt"))});
+ 
+ test('Unified header, custom palette, and assistant settings are present',()=>{assert(html.includes('body .screen .hero{background:transparent!important'));for(const id of ['colorPaper','colorSurface','colorAccent','saveCustomColors','assistantEnabled','assistantStock','assistantSales','assistantFinance','assistantLimit','saveAssistantSettings'])assert(html.includes('id="'+id+'"'));assert(html.includes('function customTheme()'));assert(html.includes('function renderAssistantSettings()'))});
+ 
+@@ -76,7 +76,7 @@
+ test('V30.38 assistant has separate operations control',()=>{assert(html.includes('id="assistantOperations"'));assert(html.includes('operations:true'));assert(html.includes('operationTitles'));assert(html.includes("['assistantOperations','operations']"))});
+ 
+ test('V30.39 custom palette shows live contrast safety status',()=>{assert(html.includes('id="colorContrastStatus"'));assert(html.includes('function renderColorContrastStatus()'));assert(html.includes('surfaceRatio>=4.5&&accentRatio>=4.5'));assert(html.includes('renderColorContrastStatus()'))});
+-test('V30.39 release pipeline version labels are aligned',()=>{const installer=fs.readFileSync(path.join(__dirname,'../installer.iss'),'utf8'),build=fs.readFileSync(path.join(__dirname,'../build_release.bat'),'utf8'),vi=fs.readFileSync(path.join(__dirname,'../version_info.txt'),'utf8');assert(installer.includes('#define MyAppVersion "3.0.51.0"'));assert(build.includes('BTDD_Setup_3.0.51.0.exe'));assert(vi.includes('filevers=(3, 0, 51, 0)'));assert(vi.includes('prodvers=(3, 0, 51, 0)'))});
++test('V30.39 release pipeline version labels are aligned',()=>{const installer=fs.readFileSync(path.join(__dirname,'../installer.iss'),'utf8'),build=fs.readFileSync(path.join(__dirname,'../build_release.bat'),'utf8'),vi=fs.readFileSync(path.join(__dirname,'../version_info.txt'),'utf8');assert(installer.includes('#define MyAppVersion "3.0.52.0"'));assert(build.includes('BTDD_Setup_3.0.52.0.exe'));assert(vi.includes('filevers=(3, 0, 52, 0)'));assert(vi.includes('prodvers=(3, 0, 52, 0)'))});
+ 
+ test('V30.40 assistant shows a compact daily priority summary without mutating data',()=>{assert(html.includes('class=\"today-focus\"'));assert(html.includes('Bugün dikkat et'));assert(html.includes("sorted.slice(0,3).map(x=>esc(x.title)).join(' · ')"));assert(html.includes('Asistan kayıtları değiştirmez'))});
+ 
+--- a/BTDD_KULLANIMA_HAZIR/tests/test_sync_status.cjs
++++ b/BTDD_KULLANIMA_HAZIR/tests/test_sync_status.cjs
+@@ -4,13 +4,13 @@
+ const fn=html.slice(html.indexOf('function setSyncStatus(ok,text)'),html.indexOf('function showMobilePin()'));
+ let count=0;
+ for(const [online,dirty,pending,conflict,explicit,expected] of [
+- [true,true,null,null,null,'Kaydediliyor…'],
+- [true,false,{},null,null,'Kaydediliyor…'],
+- [false,true,null,null,null,'Cihazda bekliyor'],
+- [false,false,{},null,null,'Cihazda bekliyor'],
++ [true,true,null,null,null,'Bağlı'],
++ [true,false,{},null,null,'Bağlı'],
++ [false,true,null,null,null,'Bağlantı Yok'],
++ [false,false,{},null,null,'Bağlantı Yok'],
+  [true,false,null,null,null,'Bağlı'],
+  [false,false,null,null,null,'Bağlantı Yok'],
+- [true,true,null,{},null,'Çakışma var'],
++ [true,true,null,{},'Kayıt çakışması','Bağlı'],
+  [false,true,null,{},'PIN gerekli','PIN gerekli']
+ ]){
+  const label={},chip={querySelector:()=>label,classList:{toggle(){}},title:''};
+--- a/BTDD_KULLANIMA_HAZIR/tests/test_sales_analysis.cjs
++++ b/BTDD_KULLANIMA_HAZIR/tests/test_sales_analysis.cjs
+@@ -18,4 +18,14 @@
+ state.closedDays=[];c.renderMonthlySales();assert(root.innerHTML.includes('Karşılaştırma yok')&&!root.innerHTML.includes('+100%'),'No previous sales is not an invented 100% increase');
+ state.closedDays.push({businessDate:'2026-08-27',sales:[{total:20,closedAt:new Date(2026,7,27).valueOf(),items:[]}]});
+ c.renderMonthlySales();assert(root.innerHTML.includes('+100%'),'Compare matching dates when prior period exists');
+-console.log('Sales analysis calculations: 7 assertions passed');
++assert.equal(c.chartPeriodComparison('daily').current,c.chartSeries('daily').reduce((n,x)=>n+x.value,0),'14-day comparison current side matches visible bars');
++state.closedDays.push(
++ {businessDate:'2026-09-12',total:30,sales:[{total:30,closedAt:new Date(2026,8,12,8).valueOf(),items:[]}]},
++ {businessDate:'2026-07-27',total:24,sales:[{total:24,closedAt:new Date(2026,6,27,8).valueOf(),items:[]}]},
++ {businessDate:'2025-08-27',total:20,sales:[{total:20,closedAt:new Date(2025,7,27,8).valueOf(),items:[]}]}
++);
++let cmp=c.chartPeriodComparison('daily');assert.equal(cmp.current,40);assert.equal(cmp.previous,30);assert.equal(Math.round(cmp.changePercent),33);
++cmp=c.chartPeriodComparison('weekly');assert.equal(cmp.current,c.chartSeries('weekly').reduce((n,x)=>n+x.value,0));assert.equal(cmp.previous,24);
++cmp=c.chartPeriodComparison('monthly');assert.equal(cmp.current,c.chartSeries('monthly').reduce((n,x)=>n+x.value,0));assert.equal(cmp.previous,20);assert.equal(Math.round(cmp.changePercent),470);
++state.closedDays=state.closedDays.filter(d=>d.businessDate==='2026-09-14');cmp=c.chartPeriodComparison('daily');assert.equal(cmp.changePercent,null,'No historical revenue avoids a fabricated percent');
++console.log('Sales analysis calculations: 15 assertions passed');
