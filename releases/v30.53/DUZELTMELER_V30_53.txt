@@ -1,0 +1,8 @@
+BTDD V30.53 — Masa süre vurgusu ve ürün adet analizi
+
+- Uyarı süresindeki masalar saydamlık ve tema ayarlarından bağımsız, dolu sarı (servis uyarısı) veya kırmızı (gecikmiş servis) kartla görünür.
+- Masa açık kalma süresi etiketlendi; son servis süresi daha okunaklı biçimde gösterilir. Kullanıcının masa bilgi görünürlüğü ayarları korunur.
+- Satış Analizi'ne ürün bazlı adet dökümü eklendi. Seçilen iş günü için günlük, pazartesi başlangıçlı hafta, ay başından bugüne ve yıl başından bugüne miktarlar birlikte görünür.
+- Ürün arama ve aktif iş gününe dönme kontrolleri eklendi. Hesaplama sadece kaydedilmiş satışlardan yapılır ve mevcut satış/stok verisini değiştirmez.
+
+Doğrulama: ürün adet aralığı için 10, masa uyarı/süre için 7, bağlantı durumu için 8, ciro karşılaştırma için 15, ön yüz için 53, senkron/navigasyon için 7, asistan için 8, grafik geometrisi/uyumluluğu için 112 ve gün sonu güvenliği için 18 kontrol geçti. Statik kontrol geçti. Grafik geometri kontrolü tarayıcı ekran görüntüsü değildir; gerçek iPhone/PC tarayıcı veya fiziksel çekmece testi yapılmamıştır.
