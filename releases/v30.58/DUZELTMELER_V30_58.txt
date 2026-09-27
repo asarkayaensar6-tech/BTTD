@@ -1,0 +1,8 @@
+ASARKAYA V30.58 — Hız iyileştirmesi
+
+- Ürün satış analizi sonucu, aynı satış verisi ve aynı tarih aralığı yeniden istendiğinde bellekte kullanılır. Arama ve sıralama tekrar render edildiğinde satış geçmişi yeniden taranmaz.
+- Ön bellek; yerel kayıt değişimi, sunucu eşitleme revizyonu, state zaman damgası, kayıt sayıları ve analiz tarih aralığı değiştiğinde otomatik geçersiz kılınır.
+- Uygulama görünür durumdayken mevcut 900 ms eşitleme aralığı korunur. Arka plandaki sekmelerde gereksiz sorgular atlanır; uygulamaya geri dönünce mevcut görünürlük olayı eşitlemeyi hemen başlatır.
+- Ürün ekleme, ödeme, kayıt yazımı ve müşteri ekranı yenileme akışlarına müdahale edilmedi.
+
+Bu sürüm için gerçek Windows/iPhone cihazında tarayıcı profili alınmadı; hızlanma etkisi gerçek cihazlarda ayrıca ölçülmelidir.

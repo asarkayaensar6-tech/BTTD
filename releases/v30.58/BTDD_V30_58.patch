@@ -1,0 +1,241 @@
+--- a/index.html
++++ b/index.html
+@@ -1913,7 +1913,7 @@
+ emoji:typeof p.emoji==='string'?p.emoji.slice(0,16):''
+ }));state.background=typeof state.background==='string'?state.background:'';state.theme=typeof state.theme==='string'?state.theme:'cream';const legacyCashPin=/^\d{4}$/.test(String(state.cashPin||''))?String(state.cashPin):'1234';const rawSectionPins=(state.sectionPins&&typeof state.sectionPins==='object'&&!Array.isArray(state.sectionPins))?state.sectionPins:{};const cleanSectionPin=v=>/^\d{4}$/.test(String(v||''))?String(v):legacyCashPin;state.sectionPins={cash:cleanSectionPin(rawSectionPins.cash),reports:cleanSectionPin(rawSectionPins.reports),products:cleanSectionPin(rawSectionPins.products)};state.cashPin=state.sectionPins.cash;if(!Array.isArray(state.closedDays))state.closedDays=[];if(!Array.isArray(state.expenses))state.expenses=[];state.auditLog=Array.isArray(state.auditLog)?state.auditLog:[];const rawCashSession=(state.cashSession&&typeof state.cashSession==='object'&&!Array.isArray(state.cashSession))?state.cashSession:{};state.cashSession={openingFloat:0,setAt:Date.now(),...rawCashSession};
+ state.sales=state.sales.map(s=>({...s,items:Array.isArray(s.items)?s.items:[],total:Number(s.total)||0}));
+-state.closedDays=state.closedDays.map(d=>({...d,sales:Array.isArray(d?.sales)?d.sales:[],expenses:Array.isArray(d?.expenses)?d.expenses:[]}));state.dayOpenedAt=Number(state.dayOpenedAt)||Date.now();state.warnMinutes=state.warnMinutes||15;state.alertMinutes=state.alertMinutes||20;const rawUiOptions=(state.uiOptions&&typeof state.uiOptions==='object'&&!Array.isArray(state.uiOptions))?state.uiOptions:{};state.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...rawUiOptions};const rawSoundOptions=(state.soundOptions&&typeof state.soundOptions==='object'&&!Array.isArray(state.soundOptions))?state.soundOptions:{};state.soundOptions={payment:true,table:true,warning:true,product:true,volume:80,paymentPreset:'success',tablePreset:'soft',warningPreset:'alert',productPreset:'click',...rawSoundOptions};state.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(state.soundOptions.volume))?Number(state.soundOptions.volume):80));state.warnMinutes=Math.max(1,Number(state.warnMinutes)||15);state.alertMinutes=Math.max(state.warnMinutes+1,Number(state.alertMinutes)||20);state.updatedAt=Math.max(0,Number(state.updatedAt)||0);const rawAssistantOptions=(state.assistantOptions&&typeof state.assistantOptions==='object'&&!Array.isArray(state.assistantOptions))?state.assistantOptions:{};state.assistantOptions={enabled:true,stock:true,sales:true,finance:true,operations:true,limit:5,...rawAssistantOptions};state.assistantOptions.limit=[3,5,8].includes(Number(state.assistantOptions.limit))?Number(state.assistantOptions.limit):5;const visibleThemes=['yellow','cream','custom'];if(!visibleThemes.includes(state.theme))state.theme='yellow';removeDuplicateOrderImages(state);if(!state.theme)state.theme='yellow';state.version='3.0.57.0';let selected=null,receiptSize=80,receiptSnapshot=null,editingProductId=null,pendingProtectedScreen='cashScreen',pendingProtectedAction='screen',pendingProtectedPinType='cash',reportTab='current',quickCategory='Hızlı Satanlar',quickProductPage=0,pendingProductImage='',removeProductImageRequested=false,pendingRemoveItemId=null,pendingRemoveReason='Yanlış basıldı',splitSelection={},splitOpenRevision=0,pendingPaymentTotal=0,productBulkMode=false,productBulkSelection=new Set(),settingsActiveTab='general',settingsSecurityUnlocked=false,pendingCancelReason='Yanlış masa';const QUICK_PRODUCT_PAGE_SIZE=10;
++state.closedDays=state.closedDays.map(d=>({...d,sales:Array.isArray(d?.sales)?d.sales:[],expenses:Array.isArray(d?.expenses)?d.expenses:[]}));state.dayOpenedAt=Number(state.dayOpenedAt)||Date.now();state.warnMinutes=state.warnMinutes||15;state.alertMinutes=state.alertMinutes||20;const rawUiOptions=(state.uiOptions&&typeof state.uiOptions==='object'&&!Array.isArray(state.uiOptions))?state.uiOptions:{};state.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...rawUiOptions};const rawSoundOptions=(state.soundOptions&&typeof state.soundOptions==='object'&&!Array.isArray(state.soundOptions))?state.soundOptions:{};state.soundOptions={payment:true,table:true,warning:true,product:true,volume:80,paymentPreset:'success',tablePreset:'soft',warningPreset:'alert',productPreset:'click',...rawSoundOptions};state.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(state.soundOptions.volume))?Number(state.soundOptions.volume):80));state.warnMinutes=Math.max(1,Number(state.warnMinutes)||15);state.alertMinutes=Math.max(state.warnMinutes+1,Number(state.alertMinutes)||20);state.updatedAt=Math.max(0,Number(state.updatedAt)||0);const rawAssistantOptions=(state.assistantOptions&&typeof state.assistantOptions==='object'&&!Array.isArray(state.assistantOptions))?state.assistantOptions:{};state.assistantOptions={enabled:true,stock:true,sales:true,finance:true,operations:true,limit:5,...rawAssistantOptions};state.assistantOptions.limit=[3,5,8].includes(Number(state.assistantOptions.limit))?Number(state.assistantOptions.limit):5;const visibleThemes=['yellow','cream','custom'];if(!visibleThemes.includes(state.theme))state.theme='yellow';removeDuplicateOrderImages(state);if(!state.theme)state.theme='yellow';state.version='3.0.58.0';let selected=null,receiptSize=80,receiptSnapshot=null,editingProductId=null,pendingProtectedScreen='cashScreen',pendingProtectedAction='screen',pendingProtectedPinType='cash',reportTab='current',quickCategory='Hızlı Satanlar',quickProductPage=0,pendingProductImage='',removeProductImageRequested=false,pendingRemoveItemId=null,pendingRemoveReason='Yanlış basıldı',splitSelection={},splitOpenRevision=0,pendingPaymentTotal=0,productBulkMode=false,productBulkSelection=new Set(),settingsActiveTab='general',settingsSecurityUnlocked=false,pendingCancelReason='Yanlış masa';const QUICK_PRODUCT_PAGE_SIZE=10;
+ const BTDD_CUSTOMER_ACTIVE_KEY='btdd-customer-active-table';
+ let manageProductPage=0;const MANAGE_PRODUCT_PAGE_SIZE=60;
+ const nowForCalendar=new Date();
+@@ -2053,7 +2053,7 @@
+   saved.soundOptions.volume=Math.max(0,Math.min(100,Number.isFinite(Number(saved.soundOptions.volume))?Number(saved.soundOptions.volume):80));const savedUi=(saved.uiOptions&&typeof saved.uiOptions==='object'&&!Array.isArray(saved.uiOptions))?saved.uiOptions:{};saved.uiOptions={showTablePrice:false,showOpenedTime:true,showItemCount:true,showServiceTime:true,showServiceWarnings:true,showTableIcon:false,glassMode:false,glassOpacity:78,...savedUi};saved.uiOptions.glassOpacity=Math.max(55,Math.min(92,Number(saved.uiOptions.glassOpacity)||78));
+   removeDuplicateOrderImages(saved);
+   BtddSafety.normalize(saved);
+-  saved.version='3.0.57.0';
++  saved.version='3.0.58.0';
+   return saved
+ }
+ function applySyncedState(saved,revision,quiet=true,epoch=null){
+@@ -2941,12 +2941,19 @@
+  const daysSince=(from,to)=>{if(!from)return null;const parts=x=>x.split('-').map(Number);return Math.max(0,Math.round((Date.UTC(...parts(to).map((n,i)=>i===1?n-1:n))-Date.UTC(...parts(from).map((n,i)=>i===1?n-1:n)))/86400000))};
+  return{rows:[...rows.values()].map(row=>{row.daysSinceLastSale=daysSince(row.lastSaleDate,anchorKey);row.dailyVelocity=row.current.qty/dayCount;row.stockCoverDays=row.stock!==null&&row.dailyVelocity>0?row.stock/row.dailyVelocity:null;row.periodDays=dayCount;row.historyTotal=row.history.length;row.history.sort((a,b)=>b.date.localeCompare(a.date)||b.closedAt-a.closedAt);row.history=row.history.slice(0,30);return row}),...ranges,dayCount};
+ }
++let productSalesAnalysisCache={key:'',value:null,ready:false};
++function getCachedProductSalesAnalysis(anchor,period,from,to){
++ const key=JSON.stringify([localMutationVersion,syncRevision,Number(state.updatedAt)||0,(state.sales||[]).length,(state.closedDays||[]).length,(state.products||[]).length,anchor,period,from,to]);
++ if(productSalesAnalysisCache.ready&&productSalesAnalysisCache.key===key)return productSalesAnalysisCache.value;
++ const value=productSalesAnalysis(allSalesForAnalytics(),anchor,period,from,to);
++ productSalesAnalysisCache={key,value,ready:true};return value
++}
+ function renderProductUnitAnalysis(){
+  const host=$('#unitSalesRows');if(!host)return;
+  const anchor=productUnitsAnchorKey||BtddSafety.businessDate(state),input=$('#unitSalesAnchor');if(input){input.max=BtddSafety.businessDate(state);if(input.value!==anchor)input.value=anchor;}
+  const period=$('#unitSalesPeriod')?.value||'month',customWrap=$('#unitSalesCustomRange'),fromInput=$('#unitSalesFrom'),toInput=$('#unitSalesTo');if(customWrap)customWrap.hidden=period!=='custom';
+  const monthStart=anchor.slice(0,8)+'01';if(fromInput){fromInput.max=anchor;if(!fromInput.value)fromInput.value=monthStart}if(toInput){toInput.max=anchor;if(!toInput.value||toInput.value>anchor)toInput.value=anchor}
+- const analysis=productSalesAnalysis(allSalesForAnalytics(),anchor,period,fromInput?.value||monthStart,toInput?.value||anchor);
++ const analysis=getCachedProductSalesAnalysis(anchor,period,fromInput?.value||monthStart,toInput?.value||anchor);
+  if(!analysis){host.innerHTML='<div class="unit-sales-empty">Özel aralık için başlangıç ve bitiş gününü seç; bitiş günü başlangıçtan önce olamaz.</div>';const count=$('#unitSalesVisibleTotal');if(count)count.textContent='0 ürün';['unitSalesKpis','unitSalesPeriods','unitSalesCategorySummary','unitSalesPager'].forEach(id=>{const e=$('#'+id);if(e)e.innerHTML=''});return}
+  const allRows=analysis.rows,query=String($('#unitSalesQuery')?.value||'').trim().toLocaleLowerCase('tr-TR'),categorySelect=$('#unitSalesCategory'),sort=$('#unitSalesSort')?.value||'revenue';
+  const categories=[...new Set(allRows.map(x=>x.category||'Arşiv ürün'))].sort((a,b)=>a.localeCompare(b,'tr'));if(categorySelect){const selected=categorySelect.value;categorySelect.innerHTML='<option value="">Tüm kategoriler</option>'+categories.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');if(categories.includes(selected))categorySelect.value=selected}
+@@ -3627,7 +3634,7 @@
+ };
+ function btddDateKey(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`}
+ function btddDownload(name,text,type){const blob=new Blob([text],{type:type||'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200)}
+-function downloadBackupFile(){const pack={app:'BTDD',version:'3.0.57.0',exportedAt:new Date().toISOString(),data:state};btddDownload('BTDD-Yedek-'+btddDateKey()+'.json',JSON.stringify(pack,null,2));toast('Yedek dosyası hazırlandı')}
++function downloadBackupFile(){const pack={app:'BTDD',version:'3.0.58.0',exportedAt:new Date().toISOString(),data:state};btddDownload('BTDD-Yedek-'+btddDateKey()+'.json',JSON.stringify(pack,null,2));toast('Yedek dosyası hazırlandı')}
+ function xesc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
+ function xcell(v,t='String'){return `<Cell><Data ss:Type="${t}">${xesc(v)}</Data></Cell>`}function xsheet(n,rows){return `<Worksheet ss:Name="${xesc(n)}"><Table>${rows.map(r=>'<Row>'+r.map(c=>xcell(c.v,c.t||'String')).join('')+'</Row>').join('')}</Table></Worksheet>`}
+ function exportExcelFile(){
+@@ -3800,7 +3807,7 @@
+ updateBusinessDayLabel();
+ restorePersistentState();
+ setTimeout(restorePersistentState,350);
+-setInterval(pollSync,900);
++setInterval(()=>{if(document.visibilityState==='visible')pollSync()},900);
+ 
+ 
+ async function loadMobileInfo(){
+--- a/installer.iss
++++ b/installer.iss
+@@ -1,5 +1,5 @@
+ #define MyAppName "ASARKAYA"
+-#define MyAppVersion "3.0.57.0"
++#define MyAppVersion "3.0.58.0"
+ #define MyAppPublisher "ASARKAYA"
+ #define MyAppExeName "BTDD.exe"
+ 
+--- a/build_release.bat
++++ b/build_release.bat
+@@ -74,7 +74,7 @@
+     echo ==========================================
+     echo   KURULUM DOSYASI HAZIR
+     echo ==========================================
+-    echo %CD%\release\ASARKAYA_Setup_3.0.57.0.exe
++    echo %CD%\release\ASARKAYA_Setup_3.0.58.0.exe
+     echo.
+     start "" "%CD%\release"
+ ) else (
+--- a/version_info.txt
++++ b/version_info.txt
+@@ -1,7 +1,7 @@
+ VSVersionInfo(
+   ffi=FixedFileInfo(
+-    filevers=(3, 0, 57, 0),
+-    prodvers=(3, 0, 57, 0),
++    filevers=(3, 0, 58, 0),
++    prodvers=(3, 0, 58, 0),
+     mask=0x3f,
+     flags=0x0,
+     OS=0x40004,
+@@ -16,12 +16,12 @@
+         [
+           StringStruct('CompanyName', 'ASARKAYA'),
+           StringStruct('FileDescription', 'ASARKAYA Adisyon ve Masa Yönetimi'),
+-          StringStruct('FileVersion', '3.0.57.0'),
++          StringStruct('FileVersion', '3.0.58.0'),
+           StringStruct('InternalName', 'BTDD'),
+           StringStruct('LegalCopyright', 'BTDD'),
+           StringStruct('OriginalFilename', 'BTDD.exe'),
+           StringStruct('ProductName', 'ASARKAYA'),
+-          StringStruct('ProductVersion', '3.0.57.0')
++          StringStruct('ProductVersion', '3.0.58.0')
+         ]
+       )
+     ]),
+--- a/BTDD_KONTROL.py
++++ b/BTDD_KONTROL.py
+@@ -10,7 +10,7 @@
+ for required in ['/api/state','/api/archive-day','/api/shutdown','/sounds/success.wav']:
+     if required not in html and required.startswith('/sounds/'): errors.append('Eksik ses dosyasi kullanimi: '+required)
+     elif required not in html and not required.startswith('/sounds/'): errors.append('Eksik API kullanimi: '+required)
+-if "state.version='3.0.57.0'" not in html: errors.append('Surum etiketi 3.0.57.0 degil')
++if "state.version='3.0.58.0'" not in html: errors.append('Surum etiketi 3.0.58.0 degil')
+ manifest=(base/'manifest.json').read_text(encoding='utf-8')
+ installer=(base/'installer.iss').read_text(encoding='utf-8')
+ if '<title>ASARKAYA — Adisyon</title>' not in html or 'apple-mobile-web-app-title\" content=\"ASARKAYA' not in html: errors.append('ASARKAYA gorunen web uygulama adi eksik')
+@@ -18,6 +18,8 @@
+ if '\"short_name\": \"ASARKAYA\"' not in manifest: errors.append('Ana ekran kisa adi ASARKAYA degil')
+ if '{autodesktop}\\ASARKAYA' not in installer: errors.append('Windows masaustu kisayol adi ASARKAYA degil')
+ if 'DefaultDirName={autopf}\\BTDD' not in installer: errors.append('Mevcut kurulum yolu geriye donuk uyumluluk icin korunmadi')
++for required in ['function getCachedProductSalesAnalysis(','productSalesAnalysisCache.ready&&productSalesAnalysisCache.key===key','localMutationVersion,syncRevision','setInterval(()=>{if(document.visibilityState===\'visible\')pollSync()},900)','btddResumeSync()']:
++    if required not in html: errors.append('V30.58 performans guvencesi eksik: '+required)
+ if 'SetupIconFile=asarkaya.ico' not in installer or 'Flags: unchecked' in installer: errors.append('ASARKAYA setup ikonu veya varsayilan masaustu kisayolu eksik')
+ if 'id=\"startupSplash\"' not in html or 'setTimeout(dismissStartupSplash,2400)' not in html: errors.append('ASARKAYA acilis perdesi guvenli geri donusu eksik')
+ for required in ['id="unitSalesAnchor"','id="unitSalesRows"','function productUnitSales(','MASA AÇIK','SON SERVİS','body .table-card.warn','body .table-card.alert']:
+@@ -84,7 +86,7 @@
+ if '<=55)state.soundOptions.volume=80' in html: errors.append('Dusuk ses seviyesini zorla 80 yapan eski hata geri gelmis')
+ if '_quarantine_corrupt_db' not in launcher or 'CorruptBackups' not in launcher: errors.append('Bozuk SQLite otomatik kurtarma eksik')
+ version_info=(base/'version_info.txt').read_text(encoding='utf-8')
+-if 'filevers=(3, 0, 57, 0)' not in version_info or 'prodvers=(3, 0, 57, 0)' not in version_info: errors.append('Windows sayisal surum bilgisi 3.0.57.0 degil')
++if 'filevers=(3, 0, 58, 0)' not in version_info or 'prodvers=(3, 0, 58, 0)' not in version_info: errors.append('Windows sayisal surum bilgisi 3.0.58.0 degil')
+ 
+ 
+ # V30.54 sade ayarlar ve kullanılmayan gezinme tekrarları
+@@ -187,5 +189,5 @@
+ print('- Toplu urun silme + hesap iptal PIN guvenligi: OK')
+ print('- Saydam/cam arayuz + kilitli ayarlar: OK')
+ print('- BTDD Sound 2.0 (8 ses): OK')
+-print('- Windows sayisal surum bilgisi: 3.0.57.0')
+-print('- Surum: 3.0.57.0')
++print('- Windows sayisal surum bilgisi: 3.0.58.0')
++print('- Surum: 3.0.58.0')
+--- a/tests/test_frontend.cjs
++++ b/tests/test_frontend.cjs
+@@ -68,7 +68,7 @@
+ test('Physical product gesture has ghost-click suppression',()=>{assert(htmlAll.includes('suppressSyntheticClickUntil'));assert(htmlAll.includes('gestureConsumed=true'));assert(htmlAll.includes('BTDD_DUPLICATE_TAP_MS=140'))});
+ test('Day close uses deterministic business-session id',()=>{assert(htmlAll.includes("id:'dayclose-'"));assert(htmlAll.includes('dayCloseInFlight'))});
+ 
+-test('V30.38 keeps simple themes and migrates removed themes safely',()=>{assert(html.includes("const visibleThemes=['yellow','cream','custom']"));assert(html.includes("if(!visibleThemes.includes(state.theme))state.theme='yellow'"));assert(!html.includes("if(!state.theme||state.theme==='yellow')state.theme='green'"));assert(html.includes("saved.version='3.0.57.0'"));assert(html.includes("version:'3.0.57.0',exportedAt"))});
++test('V30.38 keeps simple themes and migrates removed themes safely',()=>{assert(html.includes("const visibleThemes=['yellow','cream','custom']"));assert(html.includes("if(!visibleThemes.includes(state.theme))state.theme='yellow'"));assert(!html.includes("if(!state.theme||state.theme==='yellow')state.theme='green'"));assert(html.includes("saved.version='3.0.58.0'"));assert(html.includes("version:'3.0.58.0',exportedAt"))});
+ 
+ test('Unified header, custom palette, and assistant settings are present',()=>{assert(html.includes('body .screen .hero{background:transparent!important'));for(const id of ['colorPaper','colorSurface','colorAccent','saveCustomColors','assistantEnabled','assistantStock','assistantSales','assistantFinance','assistantLimit','saveAssistantSettings'])assert(html.includes('id="'+id+'"'));assert(html.includes('function customTheme()'));assert(html.includes('function renderAssistantSettings()'))});
+ 
+@@ -76,7 +76,7 @@
+ test('V30.38 assistant has separate operations control',()=>{assert(html.includes('id="assistantOperations"'));assert(html.includes('operations:true'));assert(html.includes('operationTitles'));assert(html.includes("['assistantOperations','operations']"))});
+ 
+ test('V30.39 custom palette shows live contrast safety status',()=>{assert(html.includes('id="colorContrastStatus"'));assert(html.includes('function renderColorContrastStatus()'));assert(html.includes('surfaceRatio>=4.5&&accentRatio>=4.5'));assert(html.includes('renderColorContrastStatus()'))});
+-test('V30.39 release pipeline version labels are aligned',()=>{const installer=fs.readFileSync(path.join(__dirname,'../installer.iss'),'utf8'),build=fs.readFileSync(path.join(__dirname,'../build_release.bat'),'utf8'),vi=fs.readFileSync(path.join(__dirname,'../version_info.txt'),'utf8');assert(installer.includes('#define MyAppVersion "3.0.57.0"'));assert(build.includes('ASARKAYA_Setup_3.0.57.0.exe'));assert(vi.includes('filevers=(3, 0, 57, 0)'));assert(vi.includes('prodvers=(3, 0, 57, 0)'))});
++test('V30.39 release pipeline version labels are aligned',()=>{const installer=fs.readFileSync(path.join(__dirname,'../installer.iss'),'utf8'),build=fs.readFileSync(path.join(__dirname,'../build_release.bat'),'utf8'),vi=fs.readFileSync(path.join(__dirname,'../version_info.txt'),'utf8');assert(installer.includes('#define MyAppVersion "3.0.58.0"'));assert(build.includes('ASARKAYA_Setup_3.0.58.0.exe'));assert(vi.includes('filevers=(3, 0, 58, 0)'));assert(vi.includes('prodvers=(3, 0, 58, 0)'))});
+ 
+ test('V30.40 assistant shows a compact daily priority summary without mutating data',()=>{assert(html.includes('class=\"today-focus\"'));assert(html.includes('Bugün dikkat et'));assert(html.includes("sorted.slice(0,3).map(x=>esc(x.title)).join(' · ')"));assert(html.includes('Asistan kayıtları değiştirmez'))});
+ 
+--- a/tests/test_asarkaya_branding.cjs
++++ b/tests/test_asarkaya_branding.cjs
+@@ -24,6 +24,6 @@
+ const receipt=html.match(/function receiptBody\([\s\S]*?\n/)[0];
+ assert(receipt.includes('class="receipt-brand">BTDD</div>'));
+ assert(!receipt.includes('ASARKAYA'));
+-assert(html.includes("state.version='3.0.57.0'"));
+-assert(version.includes('filevers=(3, 0, 57, 0)'));
++assert(html.includes("state.version='3.0.58.0'"));
++assert(version.includes('filevers=(3, 0, 58, 0)'));
+ console.log('ASARKAYA branding, BTDD receipt, legacy paths, and release metadata checks passed');
+--- a/tests/test_product_sales_render.cjs
++++ b/tests/test_product_sales_render.cjs
+@@ -6,7 +6,7 @@
+ const formatBusinessDate=k=>{const d=new Date(k+'T12:00:00');return d.toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric'})};
+ const money=n=>'₺'+Number(n).toFixed(2),esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+ const state={products:[{id:'tea',name:'Çay',category:'Sıcak',stock:20}]},BtddSafety={businessDate:()=> '2026-09-27'},saleDateKey=ts=>{const d=ts instanceof Date?ts:new Date(ts),z=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`};
+-const c={$,money,esc,formatBusinessDate,state,BtddSafety,saleDateKey,allSalesForAnalytics:()=>sales,productUnitsAnchorKey:null,console};vm.createContext(c);vm.runInContext('let productUnitsAnchorKey=null,productSalesPage=0;const UNIT_SALES_PAGE_SIZE=40;'+src,c);c.renderProductUnitAnalysis();
++const c={$,money,esc,formatBusinessDate,state,BtddSafety,saleDateKey,allSalesForAnalytics:()=>sales,productUnitsAnchorKey:null,console};vm.createContext(c);vm.runInContext('let productUnitsAnchorKey=null,productSalesPage=0,localMutationVersion=0,syncRevision=0;const UNIT_SALES_PAGE_SIZE=40;'+src,c);c.renderProductUnitAnalysis();
+ const output=$('#unitSalesRows').innerHTML;
+ assert(output.includes('Çay'));assert(output.includes('3 × ₺15.00 = ₺45.00'),'actual renderer prints exact recorded price and line amount');assert(output.includes('12:34'));assert(output.includes('27.09.2026 iş günü'));assert(output.includes('Masa 4'));assert(output.includes('Nakit'));
+ $('#unitSalesPeriod').value='custom';$('#unitSalesFrom').value='2026-09-28';$('#unitSalesTo').value='2026-09-27';c.renderProductUnitAnalysis();assert($('#unitSalesRows').innerHTML.includes('bitiş günü başlangıçtan önce olamaz'));
+--- /dev/null
++++ b/tests/test_performance_cache.cjs
+@@ -0,0 +1,28 @@
++const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
++const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
++const start=html.indexOf('let productSalesAnalysisCache='),end=html.indexOf('\nfunction renderProductUnitAnalysis()',start);
++assert(start>=0&&end>start,'Product analysis cache function exists');
++const cacheCode=html.slice(start,end);
++let analysisRuns=0,salesScans=0;
++const context={localMutationVersion:0,syncRevision:0,state:{updatedAt:10,sales:[{}],closedDays:[],products:[]},
++ allSalesForAnalytics(){salesScans++;return ['immutable sales snapshot']},
++ productSalesAnalysis(rows,anchor,period,from,to){analysisRuns++;return {rows,anchor,period,from,to,run:analysisRuns}}};
++vm.createContext(context);vm.runInContext(cacheCode,context);
++const get=(anchor='2026-09-28',period='month',from='2026-09-01',to='2026-09-28')=>context.getCachedProductSalesAnalysis(anchor,period,from,to);
++const first=get();assert.equal(first.run,1);
++assert.strictEqual(get(),first,'repeat render reuses analysis result');
++assert.equal(analysisRuns,1);assert.equal(salesScans,1);
++assert.equal(get('2026-09-28','week').run,2,'period change recalculates');
++assert.equal(get('2026-09-28','custom','2026-09-12','2026-09-20').run,3,'custom date range recalculates');
++context.state.updatedAt++;
++assert.equal(get().run,4,'saved state revision invalidates result');
++context.localMutationVersion++;
++assert.equal(get().run,5,'local unsaved edit invalidates result');
++context.syncRevision++;
++assert.equal(get().run,6,'remote sync revision invalidates result');
++context.state.sales.push({});
++assert.equal(get().run,7,'record count change invalidates result');
++assert.equal(salesScans,7);
++assert(html.includes("setInterval(()=>{if(document.visibilityState==='visible')pollSync()},900)"),'900 ms foreground sync is retained and hidden tabs skip polling');
++assert(html.includes("document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')btddResumeSync();else writeLocalCheckpoint()})"),'sync resumes immediately when app returns to foreground');
++console.log('OK cached analytics reuse and invalidation coverage; foreground sync cadence retained');
+--- /dev/null
++++ b/DUZELTMELER_V30_58.txt
+@@ -0,0 +1,8 @@
++ASARKAYA V30.58 — Hız iyileştirmesi
++
++- Ürün satış analizi sonucu, aynı satış verisi ve aynı tarih aralığı yeniden istendiğinde bellekte kullanılır. Arama ve sıralama tekrar render edildiğinde satış geçmişi yeniden taranmaz.
++- Ön bellek; yerel kayıt değişimi, sunucu eşitleme revizyonu, state zaman damgası, kayıt sayıları ve analiz tarih aralığı değiştiğinde otomatik geçersiz kılınır.
++- Uygulama görünür durumdayken mevcut 900 ms eşitleme aralığı korunur. Arka plandaki sekmelerde gereksiz sorgular atlanır; uygulamaya geri dönünce mevcut görünürlük olayı eşitlemeyi hemen başlatır.
++- Ürün ekleme, ödeme, kayıt yazımı ve müşteri ekranı yenileme akışlarına müdahale edilmedi.
++
++Bu sürüm için gerçek Windows/iPhone cihazında tarayıcı profili alınmadı; hızlanma etkisi gerçek cihazlarda ayrıca ölçülmelidir.
+--- /dev/null
++++ b/TEST_RAPORU_V30_58.txt
+@@ -0,0 +1,11 @@
++ASARKAYA V30.58 test raporu
++
++Durum: Yerel regresyon ve statik kontroller başarılı.
++
++- Ön bellek tekrarı: aynı girdide analiz fonksiyonu ve tüm satış kayıtlarını alma işlemi tekrar çalışmıyor.
++- Geçersiz kılma: dönem, özel tarih aralığı, kaydedilmiş state, yerel mutation, sunucu revizyonu ve kayıt sayısı değişince analiz yeniden hesaplanıyor.
++- Senkron: görünür sekmede 900 ms aralık korunuyor; görünürlük geri geldiğinde eşitleme tetikleniyor.
++- Satış analizi render testi: kayıtlı fiyat, tarih, ödeme türü, miktar ve geçersiz özel aralık kontrol edildi.
++- Uygulama paketinin mevcut testleri: ürün analizi, satış analizi, asistan, grafik matematiği, eşzamanlama, gün sonu, kasa güvenliği, tema ve statik paket kontrolleri başarılı.
++
++Kapsam notu: testler Node.js/Python test koşucularında çalıştı. Gerçek Windows kurulum, iPhone/Safari, farklı ağ kalitesi ve cihazlar arası canlı yük testi yapılmadı. Bu rapor cihaz performansı ölçümü iddiası taşımaz.
